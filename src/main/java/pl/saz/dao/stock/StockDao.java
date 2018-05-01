@@ -18,4 +18,5 @@ public interface StockDao {
     StockModel saveStock(StockModel stock);
     StockModel updateStock(WarehouseModel warehouse,KomponentModel komponent, Double stock);
     StockSummary getSummary(WarehouseModel warehouse, KomponentModel komponent);
+    StockModel changeWarehouse(KomponentModel komponent);
 }
