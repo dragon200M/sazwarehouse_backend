@@ -10,15 +10,19 @@ public class UserModel {
     private String _phone;
     private String _desc;
     private UserRole _role;
+    private String _login;
+    private String _password;
 
     public UserModel() {}
 
-    public UserModel(String _name, String _surname, String _phone, String _desc, UserRole _role) {
+    public UserModel(String _name, String _surname, String _phone, String _desc, UserRole _role,String _login,String _password) {
         this._name = _name;
         this._surname = _surname;
         this._phone = _phone;
         this._desc = _desc;
         this._role = _role;
+        this._login = _login;
+        this._password = _password;
     }
 
     public Long get_id() {
@@ -67,5 +71,21 @@ public class UserModel {
 
     public void set_role(UserRole _role) {
         this._role = _role;
+    }
+
+    public String get_login() {
+        return _login;
+    }
+
+    public void set_login(String _login) {
+        this._login = _login;
+    }
+
+    public String get_password() {
+        return _password;
+    }
+
+    public void set_password(String _password) {
+        this._password = _password;
     }
 }

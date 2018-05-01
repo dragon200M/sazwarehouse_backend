@@ -1,18 +1,22 @@
 package pl.saz.model.operationRecord;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by maciej on 01.05.18.
  */
 public class OperationRecords {
     private Long _id;
+    private LocalDateTime _operationDate;
     private OperationTypes _type;
-    private String _description;
+    private String _objectDescription;
 
     public OperationRecords() {}
 
-    public OperationRecords(OperationTypes _type, String _description) {
+    public OperationRecords(OperationTypes _type, String _objectDescription) {
         this._type = _type;
-        this._description = _description;
+        this._objectDescription = _objectDescription;
+        this._operationDate = LocalDateTime.now();
     }
 
     public Long get_id() {
@@ -31,11 +35,12 @@ public class OperationRecords {
         this._type = _type;
     }
 
-    public String get_description() {
-        return _description;
+    public String get_objectDescription() {
+        return _objectDescription;
     }
 
-    public void set_description(String _description) {
-        this._description = _description;
+    public void set_objectDescription(String _objectDescription) {
+        this._objectDescription = _objectDescription;
     }
+ //TODO nalezy dodać zapis do JSON-a
 }
