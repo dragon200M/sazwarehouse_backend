@@ -1,44 +1,35 @@
-package pl.saz.dao.operationRecord;
+package pl.saz.service.operationRecord;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pl.saz.dao.operationRecord.OperationRecordsDao;
 import pl.saz.model.operationRecord.OperationRecords;
 import pl.saz.model.operationRecord.OperationSummary;
 import pl.saz.model.operationRecord.OperationTypes;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Created by maciej on 01.05.18.
+ * Created by maciej on 02.05.18.
  */
-@Repository
-@Transactional
-public class OperationRecordsDaoImpl implements OperationRecordsDao {
+@Service
+public class OperationRecordServiceImpl implements OperationRecordService{
 
-    @PersistenceContext
-    private EntityManager manager;
+
+    @Autowired
+    private OperationRecordsDao recordsDao;
 
     @Override
     public void saveRecords(OperationRecords records) {
 
-        manager.persist(records);
+        recordsDao.saveRecords(records);
     }
 
     @Override
     public List<OperationRecords> getAll() {
 
-        List<OperationRecords> or = null;
-        try {
-            or = manager.createNativeQuery("SELECT w FROM OperationRecords w", OperationRecords.class).getResultList();
-        }catch (NoResultException e){
-            System.out.println("Brak wynikow");
-        }
-
-        return or;
+        return null;
     }
 
     @Override
@@ -63,6 +54,11 @@ public class OperationRecordsDaoImpl implements OperationRecordsDao {
 
     @Override
     public List<OperationSummary> getOperationSummary(LocalDateTime startDate, LocalDateTime endDate) {
+        return null;
+    }
+
+    @Override
+    public OperationRecords getByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return null;
     }
 }

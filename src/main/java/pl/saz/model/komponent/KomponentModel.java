@@ -1,37 +1,56 @@
 package pl.saz.model.komponent;
 
+import javax.persistence.*;
+import java.util.List;
+
 /**
  * Created by maciej on 01.05.18.
  */
+@Entity
+@Table(name = "Components")
 public class KomponentModel {
-    private Long _id;
+
+    @Id
+    @Column(name = "Name",nullable = false)
     private String _name;
+    @Column(name = "Description")
     private String _description;
+    //Pattern: 65x1|65x0.8
+    @Column(name = "Material")
+    private String _material;
+    @Column(name = "Typ1")
+    @Enumerated(EnumType.ORDINAL)
     private Types _typ_1;
+    @Column(name = "Typ2")
+    @Enumerated(EnumType.ORDINAL)
     private Types _typ_2;
+    @Column(name = "Typ3")
+    @Enumerated(EnumType.ORDINAL)
     private Types _typ_3;
+    @Column(name = "Weight")
     private Double _weight;
-    private KomponentModel _childsElement;
+    @Column(name = "DimensionX")
+    private Double _dimension_X;
+    @Column(name = "DimensionY")
+    private Double _dimension_Y;
+    @Column(name = "DimensionZ")
+    private Double _dimension_Z;
+    @Column(name = "Childs")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    private List<KomponentModel> _childsElement;
 
     public KomponentModel(){}
 
-    public KomponentModel(String _name, String _description, Types _typ_1, Types _typ_2, Types _typ_3, Double _weight, KomponentModel _childsElement) {
+    public KomponentModel(String _name, String _description, Types _typ_1, Types _typ_2, Types _typ_3, Double _weight) {
         this._name = _name;
         this._description = _description;
         this._typ_1 = _typ_1;
         this._typ_2 = _typ_2;
         this._typ_3 = _typ_3;
         this._weight = _weight;
-        this._childsElement = _childsElement;
     }
 
-    public Long get_id() {
-        return _id;
-    }
 
-    public void set_id(Long _id) {
-        this._id = _id;
-    }
 
     public String get_name() {
         return _name;
@@ -81,11 +100,43 @@ public class KomponentModel {
         this._weight = _weight;
     }
 
-    public KomponentModel get_childsElement() {
+    public List<KomponentModel> get_childsElement() {
         return _childsElement;
     }
 
-    public void set_childsElement(KomponentModel _childsElement) {
+    public void set_childsElement(List<KomponentModel> _childsElement) {
         this._childsElement = _childsElement;
+    }
+
+    public Double get_dimension_X() {
+        return _dimension_X;
+    }
+
+    public void set_dimension_X(Double _dimension_X) {
+        this._dimension_X = _dimension_X;
+    }
+
+    public Double get_dimension_Y() {
+        return _dimension_Y;
+    }
+
+    public void set_dimension_Y(Double _dimension_Y) {
+        this._dimension_Y = _dimension_Y;
+    }
+
+    public Double get_dimension_Z() {
+        return _dimension_Z;
+    }
+
+    public void set_dimension_Z(Double _dimension_Z) {
+        this._dimension_Z = _dimension_Z;
+    }
+
+    public String get_material() {
+        return _material;
+    }
+
+    public void set_material(String _material) {
+        this._material = _material;
     }
 }

@@ -1,13 +1,23 @@
 package pl.saz.model.warehouse;
 
+import javax.persistence.*;
 /**
  * Created by maciej on 01.05.18.
  */
+@Entity
+@Table(name="Warehouses")
 public class WarehouseModel {
-    private Long _id;
+    @Id
+    @Column(name = "Name", nullable = false)
     private String _name;
+
+    @Column(name = "Description")
     private String _description;
+
+    @Column(name = "Available")
     private boolean _available;
+
+    @Column(name = "VisibleName")
     private String _visibleName;
 
     public WarehouseModel(){}
@@ -19,13 +29,6 @@ public class WarehouseModel {
         this._visibleName = _visibleName;
     }
 
-    public Long get_id() {
-        return _id;
-    }
-
-    public void set_id(Long _id) {
-        this._id = _id;
-    }
 
     public String get_name() {
         return _name;

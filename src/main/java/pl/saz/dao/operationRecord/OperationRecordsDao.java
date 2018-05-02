@@ -12,7 +12,7 @@ import java.util.List;
  * Created by maciej on 01.05.18.
  */
 public interface OperationRecordsDao {
-    OperationRecords saveRecords(OperationRecords records);
+    void saveRecords(OperationRecords records);
     List<OperationRecords> getAll();
     String getByType(OperationTypes type);
     OperationRecords getByDate(LocalDateTime date);

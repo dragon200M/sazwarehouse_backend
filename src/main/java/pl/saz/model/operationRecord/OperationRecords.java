@@ -1,14 +1,28 @@
 package pl.saz.model.operationRecord;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
  * Created by maciej on 01.05.18.
  */
+@Entity
+@Table(name = "Records")
 public class OperationRecords {
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long _id;
+
+    @Column(name = "OperationDate")
     private LocalDateTime _operationDate;
+
+
+    @Column(name = "Type",nullable = false )
+    @Enumerated(EnumType.ORDINAL)
     private OperationTypes _type;
+
+    @Column(name = "Description")
     private String _objectDescription;
 
     public OperationRecords() {}
