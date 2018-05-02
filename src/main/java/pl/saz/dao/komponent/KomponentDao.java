@@ -10,8 +10,8 @@ import java.util.List;
 public interface KomponentDao {
     KomponentModel getKomponentByName(String name);
     List<KomponentModel> getAllKomponents();
-    KomponentModel saveKomponent(KomponentModel komponentModel);
+    boolean saveKomponent(KomponentModel komponentModel);
     KomponentModel updateKomponent(KomponentModel komponentModel);
-    boolean deleteKomponent(String kompoenentName);
-    boolean deleteKomponentChild(String childName);
+    void deleteKomponent(KomponentModel kompoenentName);
+    void deleteKomponentChild(KomponentModel parent,KomponentModel child);
 }

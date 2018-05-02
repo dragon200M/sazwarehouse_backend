@@ -14,4 +14,5 @@ public interface KomponentService {
     KomponentModel updateKomponent(KomponentModel komponentModel);
     boolean deleteKomponent(String kompoenentName);
     boolean deleteKomponentChild(String childName);
+    void saveTest();
 }

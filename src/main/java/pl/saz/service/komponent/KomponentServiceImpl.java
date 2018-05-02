@@ -37,4 +37,9 @@ public class KomponentServiceImpl implements KomponentService {
     public boolean deleteKomponentChild(String childName) {
         return false;
     }
+
+    @Override
+    public void saveTest() {
+
+    }
 }

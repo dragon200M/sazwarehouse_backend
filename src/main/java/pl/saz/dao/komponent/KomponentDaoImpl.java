@@ -44,22 +44,34 @@ public class KomponentDaoImpl implements KomponentDao {
 
 
     @Override
-    public KomponentModel saveKomponent(KomponentModel komponentModel) {
-        return null;
+    public boolean saveKomponent(KomponentModel komponentModel) {
+       KomponentModel tmp = getKomponentByName(komponentModel.get_name());
+       if(null != tmp){
+           manager.persist(komponentModel);
+           return true;
+       }
+       return false;
     }
 
     @Override
     public KomponentModel updateKomponent(KomponentModel komponentModel) {
-        return null;
+
+        return manager.merge(komponentModel);
     }
 
     @Override
-    public boolean deleteKomponent(String kompoenentName) {
-        return false;
+    public void deleteKomponent(KomponentModel kompoenentName) {
+        manager.remove(kompoenentName);
     }
 
     @Override
-    public boolean deleteKomponentChild(String childName) {
-        return false;
+    public void deleteKomponentChild(KomponentModel parent, KomponentModel child) {
+       KomponentModel k = getKomponentByName(parent.get_name());
+       if(null != k){
+           List<KomponentModel> ktmp = k.get_childsElement();
+           ktmp.removeIf(w -> w.get_name().equals(child.get_name()));
+           k.set_childsElement(ktmp);
+           updateKomponent(k);
+       }
     }
 }
