@@ -14,4 +14,5 @@ public interface KomponentDao {
     KomponentModel updateKomponent(KomponentModel komponentModel);
     void deleteKomponent(KomponentModel kompoenentName);
     void deleteKomponentChild(KomponentModel parent,KomponentModel child);
+    List<KomponentModel> getParentsOfChild(String name);
 }

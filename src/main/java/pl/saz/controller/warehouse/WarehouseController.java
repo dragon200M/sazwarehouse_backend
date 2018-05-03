@@ -49,6 +49,15 @@ public class WarehouseController {
         return new ResponseEntity<List<WarehouseModel>>(w, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/update/{name}", method = RequestMethod.POST)
+    public ResponseEntity<String> updateWarehouse(@RequestBody WarehouseModel warehouse,@PathVariable String name) {
+        if(warehouse.get_name().equals(name)){
+            warehouseService.updateWarehouse(warehouse);
+            return new ResponseEntity<String>("Updated:"+warehouse.get_name(), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Doesn't exists:"+warehouse.get_name(), HttpStatus.NOT_MODIFIED);
+    }
+
     @RequestMapping(value = "/setVisible/{name}", method = RequestMethod.POST)
     public ResponseEntity<String> setVisible(@PathVariable String name) {
 
@@ -68,10 +77,11 @@ public class WarehouseController {
     @RequestMapping(value = "/delete/{name}", method = RequestMethod.POST)
     public ResponseEntity<String> delete(@PathVariable String name) {
         WarehouseModel tmp = warehouseService.getByName(name);
-        warehouseService.deleteWarehouse(tmp);
+
 
         if(null != tmp){
-           return new ResponseEntity<String>("deleted:"+name, HttpStatus.OK);
+            warehouseService.deleteWarehouse(tmp);
+            return new ResponseEntity<String>("deleted:"+name, HttpStatus.OK);
         }
 
         return new ResponseEntity<String>("failure", HttpStatus.NOT_MODIFIED);

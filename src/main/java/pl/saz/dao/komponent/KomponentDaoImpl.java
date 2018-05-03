@@ -1,15 +1,20 @@
 package pl.saz.dao.komponent;
 
+import org.springframework.stereotype.Repository;
 import pl.saz.model.komponent.KomponentModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by maciej on 01.05.18.
  */
+@Repository
+@Transactional
 public class KomponentDaoImpl implements KomponentDao {
     @PersistenceContext
     private EntityManager manager;
@@ -33,7 +38,7 @@ public class KomponentDaoImpl implements KomponentDao {
     public List<KomponentModel> getAllKomponents() {
         List<KomponentModel> or = null;
         try {
-            or = manager.createNativeQuery("SELECT w FROM KomponentModel w", KomponentModel.class).getResultList();
+            or = manager.createNativeQuery("SELECT w.* FROM COMPONENTS w", KomponentModel.class).getResultList();
         }catch (NoResultException e){
             System.out.println("Brak wynikow");
         }
@@ -46,7 +51,7 @@ public class KomponentDaoImpl implements KomponentDao {
     @Override
     public boolean saveKomponent(KomponentModel komponentModel) {
        KomponentModel tmp = getKomponentByName(komponentModel.get_name());
-       if(null != tmp){
+       if(null == tmp){
            manager.persist(komponentModel);
            return true;
        }
@@ -55,23 +60,48 @@ public class KomponentDaoImpl implements KomponentDao {
 
     @Override
     public KomponentModel updateKomponent(KomponentModel komponentModel) {
+        KomponentModel t = getKomponentByName(komponentModel.get_name());
+
+        List<KomponentModel> tmpChild = t.get_childsElement();
+
+        komponentModel.set_childsElement(tmpChild);
+
 
         return manager.merge(komponentModel);
     }
 
     @Override
     public void deleteKomponent(KomponentModel kompoenentName) {
-        manager.remove(kompoenentName);
+       manager.remove(kompoenentName);
     }
 
     @Override
     public void deleteKomponentChild(KomponentModel parent, KomponentModel child) {
        KomponentModel k = getKomponentByName(parent.get_name());
-       if(null != k){
-           List<KomponentModel> ktmp = k.get_childsElement();
-           ktmp.removeIf(w -> w.get_name().equals(child.get_name()));
-           k.set_childsElement(ktmp);
-           updateKomponent(k);
+       if(null != k && !parent.equals(child)){
+           if(k.get_childsElement().size() > 0) {
+               List<KomponentModel> ktmp = k.get_childsElement();
+               ktmp.removeIf(w -> w.get_name().equals(child.get_name()));
+               k.set_childsElement(ktmp);
+               updateKomponent(k);
+           }
        }
+    }
+
+    @Override
+    public List<KomponentModel> getParentsOfChild(String name) {
+        List<KomponentModel> or = null;
+        try {
+            or = manager.createNativeQuery("SELECT distinct c.* FROM COMPONENTS__CHILDS_ELEMENT  h\n" +
+                    "        inner join Components c on h.Komponent_Model_Name = c.Name\n" +
+                    "        where _Childs_Element_name = :name", KomponentModel.class)
+                    .setParameter("name",name)
+                    .getResultList();
+        }catch (NoResultException e){
+            System.out.println("Brak wynikow");
+        }
+
+        return or;
+
     }
 }

@@ -22,7 +22,7 @@ public class OperationRecords {
     @Enumerated(EnumType.ORDINAL)
     private OperationTypes _type;
 
-    @Column(name = "Description")
+    @Column(name = "Description",length = 50000)
     private String _objectDescription;
 
     public OperationRecords() {}

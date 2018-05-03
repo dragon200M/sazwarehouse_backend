@@ -48,7 +48,6 @@ public class WarehouseDaoImpl implements WarehouseDao{
     @Override
     public WarehouseModel updateWarehouse(WarehouseModel warehouse) {
 
-
         return manager.merge(warehouse);
     }
 
