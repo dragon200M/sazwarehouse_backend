@@ -42,7 +42,7 @@ public class KomponentModel {
     private List<KomponentModel> _childsElement;
 
     public KomponentModel(){}
-
+    //TODO dodać to typ sztuka brak możlwiości dodawanie dzieci
     public KomponentModel(String _name, String _description, Types _typ_1, Types _typ_2, Types _typ_3, Double _weight) {
         this._name = _name;
         this._description = _description;
@@ -145,11 +145,13 @@ public class KomponentModel {
 
     public void add_Child(KomponentModel child, int ilosc){
         if(ilosc<0){ilosc = 0;};
-        if(this._childsElement.size() > 0){
-            this._childsElement.removeIf(c -> c.get_name().equals(child.get_name()));
-        }
-        for(int i=0;i<ilosc;i++){
-            this._childsElement.add(child);
+        if(this.get_typ_1() != Types.PUSTY && this.get_typ_1() != Types.SZTUKA) {
+            if (this._childsElement.size() > 0) {
+                this._childsElement.removeIf(c -> c.get_name().equals(child.get_name()));
+            }
+            for (int i = 0; i < ilosc; i++) {
+                this._childsElement.add(child);
+            }
         }
     }
 
