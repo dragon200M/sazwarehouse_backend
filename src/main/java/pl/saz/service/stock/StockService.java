@@ -15,6 +15,8 @@ public interface StockService {
     StockModel getById(WarehouseModel w,KomponentModel k);
     List<StockModel> getByWarehouse(WarehouseModel warehouse);
     List<StockModel> getByKomponent(KomponentModel komponent);
+    List<StockModel> getByWarehouse(String warehouse);
+    List<StockModel> getByKomponent(String komponent);
     boolean saveStock(StockModel stock);
     boolean saveStock(String w,String k,Double q);
     void deleteStock(StockModel stockModel);

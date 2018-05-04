@@ -61,6 +61,18 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public List<StockModel> getByWarehouse(String warehouse) {
+        return stockDao.getByWarehouse(warehouse);
+    }
+
+
+
+    @Override
+    public List<StockModel> getByKomponent(String komponent) {
+        return stockDao.getByKomponent(komponent);
+    }
+
+    @Override
     public boolean saveStock(StockModel stock) {
 
         boolean operation = this.stockDao.saveStock(stock);

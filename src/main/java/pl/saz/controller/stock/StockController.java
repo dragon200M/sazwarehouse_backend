@@ -116,11 +116,19 @@ public class StockController {
 
 
     @RequestMapping(value = "/getAll",method = RequestMethod.GET)
-    public ResponseEntity<List<StockModel>> getAllWarehouses(){
+    public ResponseEntity<List<StockModel>> getAllStock(){
         List<StockModel> w = stockService.getAll();
 
         return new ResponseEntity<List<StockModel>>(w, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/getAll/{war}",method = RequestMethod.GET)
+    public ResponseEntity<List<StockModel>> getAllByWarehouse(@PathVariable String war){
+        List<StockModel> w = stockService.getByWarehouse(war);
+
+        return new ResponseEntity<List<StockModel>>(w, HttpStatus.OK);
+    }
+
 
 
     @RequestMapping(value = "/getSummary",method = RequestMethod.GET)

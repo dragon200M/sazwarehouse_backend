@@ -110,4 +110,57 @@ public class StockModel implements Serializable{
 
 
     }
+
+    public class StockModelView{
+        private String wareName;
+        private String komName;
+        private String komDesc;
+        private Double stock;
+
+        public StockModelView(){
+            this.wareName = StockModel.this.getWarehouse().get_name();
+            this.komName = StockModel.this.getComponent().get_name();
+            this.komDesc = StockModel.this.getComponent().get_description();
+            this.stock = StockModel.this.get_stock();
+        }
+
+        public StockModelView(String wareName, String komName, String komDesc, Double stock) {
+            this.wareName = wareName;
+            this.komName = komName;
+            this.komDesc = komDesc;
+            this.stock = stock;
+        }
+
+        public String getWareName() {
+            return wareName;
+        }
+
+        public void setWareName(String wareName) {
+            this.wareName = wareName;
+        }
+
+        public String getKomName() {
+            return komName;
+        }
+
+        public void setKomName(String komName) {
+            this.komName = komName;
+        }
+
+        public String getKomDesc() {
+            return komDesc;
+        }
+
+        public void setKomDesc(String komDesc) {
+            this.komDesc = komDesc;
+        }
+
+        public Double getStock() {
+            return stock;
+        }
+
+        public void setStock(Double stock) {
+            this.stock = stock;
+        }
+    }
 }

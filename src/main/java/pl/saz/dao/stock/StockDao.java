@@ -15,6 +15,8 @@ public interface StockDao {
     StockModel getById(String w,String k);
     List<StockModel> getByWarehouse(WarehouseModel warehouse);
     List<StockModel> getByKomponent(KomponentModel komponent);
+    List<StockModel> getByWarehouse(String warehouse);
+    List<StockModel> getByKomponent(String komponent);
     boolean saveStock(StockModel stock);
     StockModel updateStock(WarehouseModel warehouse,KomponentModel komponent, Double stock);
     StockModel updateStock(String warehouse,String komponent, Double stock);

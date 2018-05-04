@@ -115,6 +115,44 @@ public class StockDaoImpl implements StockDao {
     }
 
     @Override
+    public List<StockModel> getByWarehouse(String warehouse) {
+        List<StockModel> or = null;
+        String war = warehouse;
+
+        try{
+            or = manager.createQuery("select w from StockModel" +
+                    " w where w._id._wName = :wName",StockModel.class)
+                    .setParameter("wName",war)
+                    .getResultList();
+
+        }catch (NoResultException e){
+            System.out.println("No resoult.");
+        }
+
+
+        return or;
+    }
+
+    @Override
+    public List<StockModel> getByKomponent(String komponent) {
+        List<StockModel> or = null;
+        String war = komponent;
+
+        try{
+            or = manager.createQuery("select w from StockModel" +
+                    " w where w._id._kName = :wName",StockModel.class)
+                    .setParameter("wName",war)
+                    .getResultList();
+
+        }catch (NoResultException e){
+            System.out.println("No resoult.");
+        }
+
+
+        return or;
+    }
+
+    @Override
     public boolean saveStock(StockModel stock) {
       StockModel tmp = getById(stock.getWarehouse(),stock.getComponent());
       if(null == tmp ) {

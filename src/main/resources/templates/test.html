@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Test info</h1>
+<p th:text = "${testW}" />
+<div th:each="s : ${stock}">
+    <p th:text="${s._komponent}+' '+${s._stock}"/>
+</div>
+<div th:each="s : ${wyniki}">
+    <p th:text="${s.wareName}+' '+${s.wareName}+' '+${s.komDesc}+' '+${s.stock}"/>
+</div>
+</body>
+</html>
