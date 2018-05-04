@@ -137,4 +137,10 @@ public class WarehouseServiceImpl implements WarehouseService {
 
         return availables;
     }
+
+    @Override
+    public String getStockInfo(String name) {
+
+        return warehouseDao.getStockInfo(name);
+    }
 }

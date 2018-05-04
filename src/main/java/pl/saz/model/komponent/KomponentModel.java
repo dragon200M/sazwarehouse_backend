@@ -3,6 +3,7 @@ package pl.saz.model.komponent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -10,7 +11,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "Components")
-public class KomponentModel {
+public class KomponentModel implements Serializable {
 
     @Id
     @Column(name = "Name",nullable = false)
@@ -29,6 +30,9 @@ public class KomponentModel {
     @Column(name = "Typ3")
     @Enumerated(EnumType.ORDINAL)
     private Types _typ_3;
+    @Column(name = "Units")
+    @Enumerated(EnumType.ORDINAL)
+    private Units _units;
     @Column(name = "Weight")
     private Double _weight;
     @Column(name = "DimensionX")
@@ -54,6 +58,15 @@ public class KomponentModel {
     }
 
 
+    public KomponentModel(String _name, String _description, Types _typ_1, Types _typ_2, Types _typ_3, Units _units, Double _weight) {
+        this._name = _name;
+        this._description = _description;
+        this._typ_1 = _typ_1;
+        this._typ_2 = _typ_2;
+        this._typ_3 = _typ_3;
+        this._units = _units;
+        this._weight = _weight;
+    }
 
     public String get_name() {
         return _name;
@@ -141,6 +154,14 @@ public class KomponentModel {
 
     public void set_material(String _material) {
         this._material = _material;
+    }
+
+    public Units get_units() {
+        return _units;
+    }
+
+    public void set_units(Units _units) {
+        this._units = _units;
     }
 
     public void add_Child(KomponentModel child, int ilosc){

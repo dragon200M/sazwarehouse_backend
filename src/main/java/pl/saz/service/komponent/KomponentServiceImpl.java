@@ -120,6 +120,12 @@ public class KomponentServiceImpl implements KomponentService {
     }
 
     @Override
+    public String getStockInfo(String name) {
+
+        return komponentDao.getStockInfo(name);
+    }
+
+    @Override
     public void saveTest() {
         KomponentModel tmp =
                 new KomponentModel("Dlugopis","Kolor niebieski", Types.SZTUKA,Types.PUSTY,Types.PUSTY,0.01532);

@@ -13,4 +13,5 @@ public interface WarehouseDao {
     boolean saveWarehouse(WarehouseModel warehouse);
     WarehouseModel updateWarehouse(WarehouseModel warehouse);
     void deleteWarehouse(WarehouseModel warehouse);
+    String getStockInfo(String name);
 }

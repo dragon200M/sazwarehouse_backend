@@ -19,4 +19,5 @@ public interface WarehouseService {
     void saveTest();
     List<WarehouseModel> getAll();
     List<WarehouseModel> getAvailable();
+    String getStockInfo(String name);
 }

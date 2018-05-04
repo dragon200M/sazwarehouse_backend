@@ -77,9 +77,9 @@ public class WarehouseController {
     @RequestMapping(value = "/delete/{name}", method = RequestMethod.POST)
     public ResponseEntity<String> delete(@PathVariable String name) {
         WarehouseModel tmp = warehouseService.getByName(name);
+        String stock = warehouseService.getStockInfo(name);
 
-
-        if(null != tmp){
+        if(null != tmp && null == stock){
             warehouseService.deleteWarehouse(tmp);
             return new ResponseEntity<String>("deleted:"+name, HttpStatus.OK);
         }

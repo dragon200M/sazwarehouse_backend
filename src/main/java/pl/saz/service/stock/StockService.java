@@ -12,12 +12,17 @@ import java.util.List;
  */
 public interface StockService {
     List<StockModel> getAll();
-    StockModel getById(Long id);
+    StockModel getById(WarehouseModel w,KomponentModel k);
     List<StockModel> getByWarehouse(WarehouseModel warehouse);
     List<StockModel> getByKomponent(KomponentModel komponent);
-    StockModel saveStock(StockModel stock);
+    boolean saveStock(StockModel stock);
+    boolean saveStock(String w,String k,Double q);
+    void deleteStock(StockModel stockModel);
+    void deleteStock(String w,String k);
     StockModel updateStock(WarehouseModel warehouse,KomponentModel komponent, Double stock);
-    StockSummary getSummary(WarehouseModel warehouse, KomponentModel komponent);
-    StockModel changeWarehouse(KomponentModel komponent);
+    StockModel updateStock(String warehouse,String komponent, Double stock);
+    List<StockSummary> getSummary();
+    List<StockSummary> getSummaryByWarehouses();
+    void saveTest();
 
 }

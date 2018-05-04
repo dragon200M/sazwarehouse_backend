@@ -2,7 +2,6 @@ package pl.saz.dao.stock;
 
 import pl.saz.model.komponent.KomponentModel;
 import pl.saz.model.stock.StockModel;
-import pl.saz.model.stock.StockSummary;
 import pl.saz.model.warehouse.WarehouseModel;
 
 import java.util.List;
@@ -12,11 +11,12 @@ import java.util.List;
  */
 public interface StockDao {
     List<StockModel> getAll();
-    StockModel getById(Long id);
+    StockModel getById(WarehouseModel w,KomponentModel k);
+    StockModel getById(String w,String k);
     List<StockModel> getByWarehouse(WarehouseModel warehouse);
     List<StockModel> getByKomponent(KomponentModel komponent);
-    StockModel saveStock(StockModel stock);
+    boolean saveStock(StockModel stock);
     StockModel updateStock(WarehouseModel warehouse,KomponentModel komponent, Double stock);
-    StockSummary getSummary(WarehouseModel warehouse, KomponentModel komponent);
-    StockModel changeWarehouse(KomponentModel komponent);
+    StockModel updateStock(String warehouse,String komponent, Double stock);
+    void deleteStock(StockModel stock);
 }

@@ -11,6 +11,7 @@ public interface KomponentService {
     KomponentModel getKomponentByName(String name);
     List<KomponentModel> getAllKomponents();
     List<KomponentModel> getParentsOfChild(String name);
+    String getStockInfo(String name);
     boolean saveKomponent(KomponentModel komponentModel);
     KomponentModel updateKomponent(KomponentModel komponentModel);
     void deleteKomponent(KomponentModel kompoenentName);

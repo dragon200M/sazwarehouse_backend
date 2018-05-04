@@ -83,8 +83,10 @@ public class KomponentController {
     @RequestMapping(value = "/delete/{name}", method = RequestMethod.DELETE)
     public ResponseEntity<String> delete(@PathVariable String name) {
         KomponentModel tmp = komponentService.getKomponentByName(name);
+        String stock = komponentService.getStockInfo(name);
+
         HttpHeaders headers = new HttpHeaders();
-        if(null != tmp) {
+        if(null != tmp && null == stock) {
             if (komponentService.getParentsOfChild(name).size() > 0) {
                 headers.set("Attention","parents");
                 return new ResponseEntity<String>("failure",headers, HttpStatus.CHECKPOINT);

@@ -67,4 +67,22 @@ public class WarehouseDaoImpl implements WarehouseDao{
 
         return w;
     }
+
+    @Override
+    public String getStockInfo(String name) {
+        String info = null;
+
+        try {
+            info = (String) manager.createNativeQuery("SELECT s.WAREHOUSEPK FROM STOCK s WHERE WAREHOUSEPK = :komp")
+                    .setParameter("komp",name)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            info = null;
+            System.out.println("Brak wynikow");
+        }
+
+
+        return info;
+    }
+
 }

@@ -104,4 +104,30 @@ public class KomponentDaoImpl implements KomponentDao {
         return or;
 
     }
+
+    @Override
+    public String getStockInfo(String name) {
+        String info = null;
+
+        try {
+            info = (String) manager.createNativeQuery("SELECT s.COMPONENTPK FROM STOCK s WHERE COMPONENTPK = :komp")
+                    .setParameter("komp",name)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            info = null;
+            System.out.println("Brak wynikow");
+        }
+
+
+        return info;
+    }
 }
+
+
+
+
+
+
+
+
+

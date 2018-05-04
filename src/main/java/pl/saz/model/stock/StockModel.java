@@ -3,45 +3,41 @@ package pl.saz.model.stock;
 import pl.saz.model.komponent.KomponentModel;
 import pl.saz.model.warehouse.WarehouseModel;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Created by maciej on 01.05.18.
  */
-public class StockModel {
-    private Long _id;
-    private WarehouseModel _warehouse;
-    private KomponentModel _komponent;
+@Entity
+@Table(name = "STOCK")
+public class StockModel implements Serializable{
+
+    @EmbeddedId
+    private StockModelPK _id;
+
+    @OneToOne
+    private WarehouseModel warehouse;
+
+    @OneToOne
+    private KomponentModel component;
+
+    @Column(name = "Stock")
     private Double _stock;
+
 
     public StockModel(){}
 
-    public StockModel(WarehouseModel _warehouse, KomponentModel _komponent, Double _stock) {
-        this._warehouse = _warehouse;
-        this._komponent = _komponent;
+    public StockModel(Double _stock) {
+
         this._stock = _stock;
     }
 
-    public Long get_id() {
-        return _id;
-    }
-
-    public void set_id(Long _id) {
-        this._id = _id;
-    }
-
-    public WarehouseModel get_warehouse() {
-        return _warehouse;
-    }
-
-    public void set_warehouse(WarehouseModel _warehouse) {
-        this._warehouse = _warehouse;
-    }
-
-    public KomponentModel get_komponent() {
-        return _komponent;
-    }
-
-    public void set_komponent(KomponentModel _komponent) {
-        this._komponent = _komponent;
+    public StockModel(WarehouseModel warehouse, KomponentModel component, Double _stock) {
+        this.warehouse = warehouse;
+        this.component = component;
+        this._stock = _stock;
+        this._id = new StockModelPK(warehouse,component);
     }
 
     public Double get_stock() {
@@ -50,5 +46,68 @@ public class StockModel {
 
     public void set_stock(Double _stock) {
         this._stock = _stock;
+    }
+
+
+    public StockModelPK get_id() {
+        return _id;
+    }
+
+    public void set_id(StockModelPK _id) {
+        this._id = _id;
+    }
+
+    public WarehouseModel getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(WarehouseModel warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public KomponentModel getComponent() {
+        return component;
+    }
+
+    public void setComponent(KomponentModel component) {
+        this.component = component;
+    }
+
+    @Embeddable
+    public static class StockModelPK implements Serializable{
+        @Column(name = "WarehousePK")
+        private String _wName;
+        @Column(name = "ComponentPK")
+        private String _kName;
+
+        public StockModelPK(String _wName, String _kName) {
+            this._wName = _wName;
+            this._kName = _kName;
+        }
+
+        public StockModelPK(WarehouseModel _w, KomponentModel _k){
+            this._wName = _w.get_name();
+            this._kName = _k.get_name();
+        }
+
+        public StockModelPK(){}
+
+        public String get_wName() {
+            return _wName;
+        }
+
+        public void set_wName(String _wName) {
+            this._wName = _wName;
+        }
+
+        public String get_kName() {
+            return _kName;
+        }
+
+        public void set_kName(String _kName) {
+            this._kName = _kName;
+        }
+
+
     }
 }

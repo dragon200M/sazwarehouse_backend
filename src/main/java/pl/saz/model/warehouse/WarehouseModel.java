@@ -1,12 +1,14 @@
 package pl.saz.model.warehouse;
 
 import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Created by maciej on 01.05.18.
  */
 @Entity
 @Table(name="Warehouses")
-public class WarehouseModel {
+public class WarehouseModel implements Serializable{
     @Id
     @Column(name = "Name", nullable = false)
     private String _name;

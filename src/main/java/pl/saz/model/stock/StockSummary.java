@@ -1,42 +1,37 @@
 package pl.saz.model.stock;
 
-import pl.saz.model.komponent.KomponentModel;
-import pl.saz.model.warehouse.WarehouseModel;
-
 /**
  * Created by maciej on 01.05.18.
  */
 public class StockSummary {
     //Podsumowanie ilosc komponentow w danym magazynie oraz ilosc wszystkich komponentows
-    WarehouseModel _warehouse;
-    KomponentModel _komponent;
-    Double _stock;
+    private String _warehouse;
+    private String _komponent;
+    private Double _stock;
 
-    public StockSummary(WarehouseModel _warehouse, KomponentModel _komponent, Double _stock) {
+    public StockSummary() {}
+
+    public StockSummary(String _warehouse, String _komponent, Double _stock) {
         this._warehouse = _warehouse;
         this._komponent = _komponent;
         this._stock = _stock;
     }
 
 
-    public StockSummary(KomponentModel _komponent, Double _stock) {
-        this._komponent = _komponent;
-        this._stock = _stock;
-    }
 
-    public WarehouseModel get_warehouse() {
+    public String get_warehouse() {
         return _warehouse;
     }
 
-    public void set_warehouse(WarehouseModel _warehouse) {
+    public void set_warehouse(String _warehouse) {
         this._warehouse = _warehouse;
     }
 
-    public KomponentModel get_komponent() {
+    public String get_komponent() {
         return _komponent;
     }
 
-    public void set_komponent(KomponentModel _komponent) {
+    public void set_komponent(String _komponent) {
         this._komponent = _komponent;
     }
 
