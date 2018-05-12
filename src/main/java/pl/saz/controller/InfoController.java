@@ -3,10 +3,13 @@ package pl.saz.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.saz.model.stock.StockModel;
 import pl.saz.model.stock.StockSummary;
+import pl.saz.model.warehouse.WarehouseModel;
 import pl.saz.service.stock.StockService;
+import pl.saz.service.warehouse.WarehouseService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,9 @@ public class InfoController {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private WarehouseService warehouseService;
 
     @RequestMapping(value = "/info")
     public String greeting( Model model){
@@ -43,4 +49,38 @@ public class InfoController {
         model.addAttribute("wyniki",w2);
         return "test";
     }
+
+
+    @RequestMapping(value = "/magazyn")
+    public String stockRedirect(Model model){
+        List<WarehouseModel> w = warehouseService.getAvailable();
+        model.addAttribute("wList",w);
+
+        return "data-table";
+    }
+
+    @RequestMapping(value = "/magazyn/{id}")
+    public String stock(@PathVariable String id, Model model){
+        List<WarehouseModel> w = warehouseService.getAvailable();
+        WarehouseModel warehouseModel = warehouseService.getByName(id);
+
+
+        model.addAttribute("wList",w);
+        model.addAttribute("stocks",stockService.getStockView(id));
+        model.addAttribute("warhouse",warehouseModel);
+
+        return "data-table";
+    }
+
+    @RequestMapping(value = "/magazyn/podsumowanie")
+    public String stockSummary(Model model){
+        List<WarehouseModel> w = warehouseService.getAvailable();
+        List<StockSummary> view = stockService.getSummaryAvailable();
+
+        model.addAttribute("wList",w);
+        model.addAttribute("viewList",view);
+
+        return "data-table";
+    }
+
 }

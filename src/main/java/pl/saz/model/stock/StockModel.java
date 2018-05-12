@@ -73,6 +73,16 @@ public class StockModel implements Serializable{
         this.component = component;
     }
 
+    @Override
+    public String toString() {
+        return "StockModel{" +
+                "_id=" + _id.get_kName()+"|"+ _id.get_wName() +
+                ", warehouse=" + warehouse.get_name() +
+                ", component=" + component.get_name() +
+                ", _stock=" + _stock +
+                '}';
+    }
+
     @Embeddable
     public static class StockModelPK implements Serializable{
         @Column(name = "WarehousePK")
@@ -163,4 +173,5 @@ public class StockModel implements Serializable{
             this.stock = stock;
         }
     }
+
 }

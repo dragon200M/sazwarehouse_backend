@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.saz.dao.stock.StockDao;
+import pl.saz.dao.stock.StockOperation;
 import pl.saz.model.komponent.KomponentModel;
 import pl.saz.model.operationRecord.OperationRecords;
 import pl.saz.model.operationRecord.OperationTypes;
+import pl.saz.model.stock.StockListUpdate;
 import pl.saz.model.stock.StockModel;
 import pl.saz.model.stock.StockSummary;
 import pl.saz.model.warehouse.WarehouseModel;
@@ -109,6 +111,7 @@ public class StockServiceImpl implements StockService {
         return false;
     }
 
+
     @Override
     public StockModel updateStock(WarehouseModel warehouse, KomponentModel komponent, Double stock) {
 
@@ -120,6 +123,14 @@ public class StockServiceImpl implements StockService {
         return stockDao.updateStock(warehouse,komponent,stock);
     }
 
+
+    @Override
+    public List<StockListUpdate> updateStocks(List<StockListUpdate> newStock) {
+
+
+        return stockDao.updateStock(newStock);
+    }
+
     @Override
     public List<StockSummary> getSummary() {
         List<StockModel> tmp = stockDao.getAll();
@@ -129,6 +140,22 @@ public class StockServiceImpl implements StockService {
                 Collectors.groupingBy(s -> s.getComponent().get_name(),Collectors.summingDouble(StockModel::get_stock)));
 
         for(Map.Entry<String,Double> e: sum.entrySet()){
+            StockSummary s = new StockSummary("",e.getKey(),e.getValue());
+            r1.add(s);
+        }
+
+        return r1;
+    }
+
+    @Override
+    public List<StockSummary> getSummaryAvailable() {
+        List<StockModel> tmp = stockDao.getAll().stream().filter(p -> p.getWarehouse().is_available()  == true).collect(Collectors.toList());
+        List<StockSummary> r1 = new ArrayList<>();
+
+        Map<KomponentModel,Double> sum = tmp.stream().collect(
+                Collectors.groupingBy(s -> s.getComponent(),Collectors.summingDouble(StockModel::get_stock)));
+
+        for(Map.Entry<KomponentModel,Double> e: sum.entrySet()){
             StockSummary s = new StockSummary("",e.getKey(),e.getValue());
             r1.add(s);
         }
@@ -157,6 +184,43 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public List<StockListUpdate> getPieceQuantity(List<StockListUpdate> newStock) {
+        List<StockListUpdate> tmp = new ArrayList<StockListUpdate>();
+        List<KomponentModel.Calculation> w = new ArrayList<KomponentModel.Calculation>();
+
+        for(StockListUpdate el: newStock) {
+            KomponentModel a = komponentService.getKomponentByName(el.getKomponentName());
+            if(null != a) {
+                List<KomponentModel.Calculation> tc = a.calc();
+                for (KomponentModel.Calculation c : tc) {
+                    c.set_quantity(c.get_quantity() * el.getNewStock().intValue());
+                    w.add(c);
+                }
+            }
+        }
+
+        w.stream().collect(Collectors.groupingBy(s -> s.get_childComponentName(),Collectors.summingInt(s -> s.get_quantity())))
+                .forEach( (s,i) -> {
+
+                 StockModel kw = getByKomponent(s).size() == 0 ? null : getByKomponent(s).get(0) ;
+                 if(null != kw) {
+                     System.out.println("dodawanie magazynu do komponentu");
+                     StockListUpdate stu = new StockListUpdate(kw.getWarehouse().get_name(),s, i.doubleValue(),StockOperation.REMOVE);
+                     tmp.add(stu);
+                 }else{
+                     System.out.println("dodawanie magazynu do komponentu 2");
+                     StockListUpdate stu = new StockListUpdate("",s, i.doubleValue(),StockOperation.REMOVE);
+                     tmp.add(stu);
+                 }
+              });
+
+
+
+
+        return tmp;
+    }
+
+    @Override
     public void deleteStock(StockModel stockModel) {
         stockDao.deleteStock(stockModel);
     }
@@ -168,6 +232,21 @@ public class StockServiceImpl implements StockService {
             stockDao.deleteStock(st);
         }
     }
+
+    @Override
+    public List<StockModel.StockModelView> getStockView(String warehouseName) {
+        List<StockModel> st = getByWarehouse(warehouseName);
+
+        List<StockModel.StockModelView> w2 = new ArrayList<>();
+
+        for(StockModel s:st){
+            StockModel.StockModelView b = s.new StockModelView();
+            w2.add(b);
+        }
+
+        return w2;
+    }
+
     @Override
     public void saveTest() {
         WarehouseModel w1 = warehouseService.getByName("test4");

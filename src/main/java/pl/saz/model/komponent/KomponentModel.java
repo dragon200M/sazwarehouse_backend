@@ -18,6 +18,8 @@ public class KomponentModel implements Serializable {
     private String _name;
     @Column(name = "Description",length = 400)
     private String _description = "";
+    @Column(name = "SortOrder")
+    private Integer _sortorder;
     //Pattern: 65x1|65x0.8
     @Column(name = "Material",length = 400)
     private String _material = "";
@@ -45,7 +47,9 @@ public class KomponentModel implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<KomponentModel> _childsElement;
 
-    public KomponentModel(){}
+    public KomponentModel(){
+        this._sortorder = 0;
+    }
     //TODO dodać to typ sztuka brak możlwiości dodawanie dzieci
     public KomponentModel(String _name, String _description, Types _typ_1, Types _typ_2, Types _typ_3, Double _weight) {
         this._name = _name;
@@ -55,6 +59,8 @@ public class KomponentModel implements Serializable {
         this._typ_3 = _typ_3;
         this._weight = _weight;
         this._childsElement = new ArrayList<>();
+        this._sortorder = 0;
+        this._units = Units.PIECE;
     }
 
 
@@ -66,6 +72,7 @@ public class KomponentModel implements Serializable {
         this._typ_3 = _typ_3;
         this._units = _units;
         this._weight = _weight;
+        this._sortorder = 0;
     }
 
     public String get_name() {
@@ -82,6 +89,16 @@ public class KomponentModel implements Serializable {
 
     public void set_description(String _description) {
         this._description = _description;
+    }
+
+    public Integer get_sortorder() {
+        if(null == this._sortorder){this._sortorder = 0;};
+        return _sortorder;
+    }
+
+    public void set_sortorder(Integer _sortorder) {
+        if(null == this._sortorder){this._sortorder = 0;}
+        this._sortorder = _sortorder;
     }
 
     public Types get_typ_1() {
@@ -157,10 +174,12 @@ public class KomponentModel implements Serializable {
     }
 
     public Units get_units() {
+
         return _units;
     }
 
     public void set_units(Units _units) {
+        if(null == this._units){this._units = Units.PIECE;}
         this._units = _units;
     }
 

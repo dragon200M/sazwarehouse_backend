@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.saz.model.komponent.KomponentModel;
+import pl.saz.model.stock.StockListUpdate;
 import pl.saz.model.stock.StockModel;
 import pl.saz.model.stock.StockSummary;
 import pl.saz.model.warehouse.WarehouseModel;
@@ -101,6 +102,15 @@ public class StockController {
         return new ResponseEntity<String>("Doesn't exists", HttpStatus.NOT_MODIFIED);
     }
 
+    @RequestMapping(value = "/update/list", method = RequestMethod.PUT)
+    public ResponseEntity<List<StockListUpdate>> updateStock(@RequestBody List<StockListUpdate> list){
+
+
+        List<StockListUpdate> t = stockService.updateStocks(list);
+
+        return new ResponseEntity<List<StockListUpdate>>(t, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/update/{war}/{kom}/{quantity}", method = RequestMethod.POST)
     public ResponseEntity<String> updateStock2(@PathVariable String war,
                                                @PathVariable String kom,
@@ -138,11 +148,25 @@ public class StockController {
         return new ResponseEntity<List<StockSummary>>(w, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getSummaryavailable",method = RequestMethod.GET)
+    public ResponseEntity<List<StockSummary>> getSummaryAvailable(){
+        List<StockSummary> w = stockService.getSummaryAvailable();
+
+        return new ResponseEntity<List<StockSummary>>(w, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/getSummary2",method = RequestMethod.GET)
     public ResponseEntity<List<StockSummary>> getSummary2(){
         List<StockSummary> w = stockService.getSummaryByWarehouses();
 
         return new ResponseEntity<List<StockSummary>>(w, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getPieceQuantity",method = RequestMethod.PUT)
+    public ResponseEntity<List<StockListUpdate>> getPieceQuantity(@RequestBody List<StockListUpdate> list){
+        List<StockListUpdate> w = stockService.getPieceQuantity(list);
+
+        return new ResponseEntity<List<StockListUpdate>>(w, HttpStatus.OK);
     }
 
 

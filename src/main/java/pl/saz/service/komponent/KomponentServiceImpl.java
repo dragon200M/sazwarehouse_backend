@@ -11,6 +11,7 @@ import pl.saz.model.operationRecord.OperationTypes;
 import pl.saz.service.operationRecord.OperationRecordService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by maciej on 02.05.18.
@@ -126,6 +127,13 @@ public class KomponentServiceImpl implements KomponentService {
     }
 
     @Override
+    public List<KomponentModel> getMainKomponents() {
+        List<KomponentModel> tmp = komponentDao.getAllKomponents().stream().filter(k -> k.get_typ_1() == Types.GLOWNY).collect(Collectors.toList());
+
+        return tmp;
+    }
+
+    @Override
     public void saveTest() {
         KomponentModel tmp =
                 new KomponentModel("Dlugopis","Kolor niebieski", Types.SZTUKA,Types.PUSTY,Types.PUSTY,0.01532);
@@ -136,7 +144,7 @@ public class KomponentServiceImpl implements KomponentService {
     @Override
     public void saveTest2() {
         KomponentModel tmp =
-                new KomponentModel("A","Kolor niebieski", Types.KOMPLET,Types.PUSTY,Types.PUSTY,0.01532);
+                new KomponentModel("A","Kolor niebieski", Types.GLOWNY,Types.PUSTY,Types.PUSTY,0.01532);
         KomponentModel tmp2 =
                 new KomponentModel("B","Kolor niebieski", Types.SZTUKA,Types.PUSTY,Types.PUSTY,0.01532);
         KomponentModel tmp3 =
@@ -163,6 +171,5 @@ public class KomponentServiceImpl implements KomponentService {
         komponentDao.saveKomponent(tmp5);
         komponentDao.saveKomponent(tmp);
     }
-
 
 }

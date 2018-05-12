@@ -21,18 +21,18 @@ public class WarehouseController {
   private WarehouseService warehouseService;
 
   @RequestMapping(value = "/new",method = RequestMethod.POST)
-  public ResponseEntity<String> saveWarehouse(@RequestBody WarehouseModel warehouse){
+  public ResponseEntity<WarehouseModel> saveWarehouse(@RequestBody WarehouseModel warehouse){
       HttpHeaders headers = new HttpHeaders();
 
       boolean check = warehouseService.saveWarehouse(warehouse);
 
       if(check){
           headers.set("WarehouseNew",warehouse.get_name());
-          return new ResponseEntity<String>("Warehouse was added",headers,HttpStatus.CREATED);
+          return new ResponseEntity<WarehouseModel>(warehouse,headers,HttpStatus.CREATED);
       }
       headers.set("Failure",warehouse.get_name());
 
-      return new ResponseEntity<String>("",headers,HttpStatus.NOT_MODIFIED);
+      return new ResponseEntity<WarehouseModel>(new WarehouseModel(),headers,HttpStatus.NOT_MODIFIED);
   }
 
   @RequestMapping(value = "/getAll",method = RequestMethod.GET)

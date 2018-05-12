@@ -10,6 +10,7 @@ import java.util.List;
 public interface KomponentService {
     KomponentModel getKomponentByName(String name);
     List<KomponentModel> getAllKomponents();
+    List<KomponentModel> getMainKomponents();
     List<KomponentModel> getParentsOfChild(String name);
     String getStockInfo(String name);
     boolean saveKomponent(KomponentModel komponentModel);

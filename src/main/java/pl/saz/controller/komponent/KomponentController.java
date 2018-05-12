@@ -54,6 +54,13 @@ public class KomponentController {
         return new ResponseEntity<List<KomponentModel>>(k,HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getMain", method = RequestMethod.GET)
+    public ResponseEntity<List<KomponentModel>> getMainKomponents(){
+        List<KomponentModel> k = komponentService.getMainKomponents();
+
+        return new ResponseEntity<List<KomponentModel>>(k,HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/getByName/{name}", method = RequestMethod.GET)
     public ResponseEntity<KomponentModel> getByName(@PathVariable String name){
         KomponentModel k = komponentService.getKomponentByName(name);
@@ -125,6 +132,7 @@ public class KomponentController {
     public void start2() {
         komponentService.saveTest2();
     }
+
 
     @RequestMapping(value = "/getSummary/{name}", method = RequestMethod.GET)
     public ResponseEntity<List<KomponentModel.Calculation>> getTestSummary(@PathVariable String name){

@@ -1,6 +1,7 @@
 package pl.saz.dao.stock;
 
 import pl.saz.model.komponent.KomponentModel;
+import pl.saz.model.stock.StockListUpdate;
 import pl.saz.model.stock.StockModel;
 import pl.saz.model.warehouse.WarehouseModel;
 
@@ -20,5 +21,6 @@ public interface StockDao {
     boolean saveStock(StockModel stock);
     StockModel updateStock(WarehouseModel warehouse,KomponentModel komponent, Double stock);
     StockModel updateStock(String warehouse,String komponent, Double stock);
+    List<StockListUpdate> updateStock(List<StockListUpdate> updates);
     void deleteStock(StockModel stock);
 }

@@ -2,15 +2,18 @@ package pl.saz.dao.stock;
 
 import org.springframework.stereotype.Repository;
 import pl.saz.model.komponent.KomponentModel;
+import pl.saz.model.stock.StockListUpdate;
 import pl.saz.model.stock.StockModel;
-import pl.saz.model.stock.StockSummary;
 import pl.saz.model.warehouse.WarehouseModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by maciej on 01.05.18.
@@ -155,7 +158,9 @@ public class StockDaoImpl implements StockDao {
     @Override
     public boolean saveStock(StockModel stock) {
       StockModel tmp = getById(stock.getWarehouse(),stock.getComponent());
-      if(null == tmp ) {
+      List<StockModel> k =  getByKomponent(stock.getComponent().get_name());
+
+      if(null == tmp && k.size() == 0) {
           manager.persist(stock);
           return true;
       }
@@ -186,8 +191,81 @@ public class StockDaoImpl implements StockDao {
     }
 
     @Override
+    public List<StockListUpdate> updateStock(List<StockListUpdate> updates) {
+        List<StockModel> updatedStock = new ArrayList<StockModel>();
+          List<StockListUpdate> el = new ArrayList<StockListUpdate>();
+          List<StockListUpdate> newList = new ArrayList<StockListUpdate>();
+
+          Map<String,List<StockListUpdate>> byWare =
+                 updates.stream().collect(Collectors.groupingBy(StockListUpdate::getWarehouseName));
+
+         byWare.forEach( (a,b) -> {
+
+             b.stream().collect(Collectors.groupingBy( k -> k.getKomponentName(),
+                     Collectors.summingDouble(k-> k.getType() == StockOperation.REMOVE ? -k.getNewStock(): k.getNewStock())))
+                     .forEach( (id, s) -> {
+                         StockListUpdate newListElement = new StockListUpdate(a,id,s,StockOperation.ADD);
+                         newList.add(newListElement);
+                     });
+         });
+
+          for(StockListUpdate listUpdate: newList){
+              StockModel t = getById(listUpdate.getWarehouseName(),listUpdate.getKomponentName());
+              if(null != t){
+                  Double check = t.get_stock()+listUpdate.getNewStock();
+                  if(check >= 0) {
+                      updatedStock.add(t);
+                  }else {
+                      listUpdate.setType(StockOperation.ERROR);
+                      listUpdate.setNewStock(t.get_stock()+listUpdate.getNewStock());
+                      el.add(listUpdate);
+                  }
+              }else{
+                  listUpdate.setType(StockOperation.ERROR);
+                  el.add(listUpdate);
+              }
+          }
+
+          if(el.size() == 0) {
+              for(StockListUpdate l2: newList) {
+                  for(StockModel st : updatedStock){
+                      if(l2.getWarehouseName().equals(st.getWarehouse().get_name()) && l2.getKomponentName().equals(st.getComponent().get_name())) {
+                          st.set_stock(st.get_stock() + l2.getNewStock());
+                          manager.merge(st);
+                      }
+                  }
+              }
+          }
+
+
+
+        return el;
+    }
+
+
+
+    @Override
     public void deleteStock(StockModel stock) {
       manager.remove(manager.contains(stock) ? stock : manager.merge(stock));
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
