@@ -25,12 +25,22 @@ public class OperationRecords {
     @Column(name = "Description",length = 50000)
     private String _objectDescription;
 
+    @Column(name = "ClassName")
+    private String _className = "";
+
     public OperationRecords() {}
 
     public OperationRecords(OperationTypes _type, String _objectDescription) {
         this._type = _type;
         this._objectDescription = _objectDescription;
         this._operationDate = LocalDateTime.now();
+    }
+
+    public OperationRecords(OperationTypes _type, String _objectDescription, String _className) {
+        this._operationDate = LocalDateTime.now();
+        this._type = _type;
+        this._objectDescription = _objectDescription;
+        this._className = _className;
     }
 
     public Long get_id() {
@@ -56,5 +66,20 @@ public class OperationRecords {
     public void set_objectDescription(String _objectDescription) {
         this._objectDescription = _objectDescription;
     }
- //TODO nalezy dodać zapis do JSON-a
+
+    public LocalDateTime get_operationDate() {
+        return _operationDate;
+    }
+
+    public void set_operationDate(LocalDateTime _operationDate) {
+        this._operationDate = _operationDate;
+    }
+
+    public String get_className() {
+        return _className;
+    }
+
+    public void set_className(String _className) {
+        this._className = _className;
+    }
 }

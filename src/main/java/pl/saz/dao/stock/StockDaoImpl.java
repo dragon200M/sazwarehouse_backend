@@ -183,7 +183,7 @@ public class StockDaoImpl implements StockDao {
     public StockModel updateStock(String warehouse, String komponent, Double stock) {
         StockModel tmp = getById(warehouse,komponent);
         if(null != tmp) {
-            tmp.set_stock(stock);
+            tmp.set_stock((double)Math.round(stock*100.0)/100.0);
             return manager.merge(tmp);
         }
 
@@ -192,7 +192,7 @@ public class StockDaoImpl implements StockDao {
 
     @Override
     public List<StockListUpdate> updateStock(List<StockListUpdate> updates) {
-        List<StockModel> updatedStock = new ArrayList<StockModel>();
+          List<StockModel> updatedStock = new ArrayList<StockModel>();
           List<StockListUpdate> el = new ArrayList<StockListUpdate>();
           List<StockListUpdate> newList = new ArrayList<StockListUpdate>();
 
@@ -204,7 +204,7 @@ public class StockDaoImpl implements StockDao {
              b.stream().collect(Collectors.groupingBy( k -> k.getKomponentName(),
                      Collectors.summingDouble(k-> k.getType() == StockOperation.REMOVE ? -k.getNewStock(): k.getNewStock())))
                      .forEach( (id, s) -> {
-                         StockListUpdate newListElement = new StockListUpdate(a,id,s,StockOperation.ADD);
+                         StockListUpdate newListElement = new StockListUpdate(a,id,(double)Math.round(s*100.0)/100.0,StockOperation.ADD);
                          newList.add(newListElement);
                      });
          });

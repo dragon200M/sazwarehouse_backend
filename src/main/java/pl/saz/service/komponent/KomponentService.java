@@ -20,4 +20,5 @@ public interface KomponentService {
     void addChildToParent(String kompoenentName,String childName,int ilosc);
     void saveTest();
     void saveTest2();
+    void findAllParents(String kompoenentName);
 }

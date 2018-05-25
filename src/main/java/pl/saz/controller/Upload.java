@@ -1,21 +1,26 @@
 package pl.saz.controller;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import pl.saz.model.stock.StockListUpdate;
+import pl.saz.service.stock.StockService;
 
-import java.io.FileNotFoundException;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Iterator;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by maciej on 06.05.18.
@@ -23,48 +28,74 @@ import java.util.Iterator;
 @Controller
 public class Upload {
 
+    @Autowired
+    private StockService stockService;
 
-    //http://www.mkyong.com/spring-boot/spring-boot-file-upload-example-ajax-and-rest/
-    @PostMapping(value = "/api/upload")
+
+    @PutMapping(value = "/api/upload/file")
     @ResponseBody
-    public ResponseEntity<?> uploadFile(
+    public String uploadFile(
             @RequestParam("file") MultipartFile uploadfile) throws IOException {
 
-        if(uploadfile.isEmpty()){
+        String filesName = uploadfile.getOriginalFilename();
+
+        System.out.println(filesName);
+
+
+        return "{\"name\":\""+filesName+"\"}";
+    }
+
+
+
+    @PutMapping(value = "/api/upload/files")
+    @ResponseBody
+    public ResponseEntity<List<StockListUpdate>> uploadFiles(
+            @RequestParam("files") MultipartFile[] uploadfile) throws IOException {
+
+        String filesName = Arrays.stream(uploadfile).map(x -> x.getOriginalFilename())
+                .filter(x -> !org.springframework.util.StringUtils.isEmpty(x)).collect(Collectors.joining(":"));
+
+        if(StringUtils.isEmpty(filesName)){
             return new ResponseEntity("please select a file!", HttpStatus.OK);
         }
 
-        try {
-            OPCPackage pkg = OPCPackage.open(uploadfile.getInputStream());
-            XSSFWorkbook workbook = new XSSFWorkbook(pkg);
-            Sheet datatypeSheet = workbook.getSheetAt(0);
-            Iterator<Row> iterator = datatypeSheet.iterator();
+        List<StockListUpdate> slu = stockService.updateStockByFile(uploadfile);
 
-            System.out.println(datatypeSheet.getSheetName());
-
-
-
-
-        }catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidFormatException e) {
-            e.printStackTrace();
+        if(slu.size() > 0){
+            return new ResponseEntity<List<StockListUpdate>>(slu, new HttpHeaders(), HttpStatus.OK);
         }
 
 
-        return new ResponseEntity("Successfully uploaded - " +
-                uploadfile.getOriginalFilename(), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<List<StockListUpdate>>(slu, new HttpHeaders(), HttpStatus.OK);
     }
+
+
+    @GetMapping(value = "/api/download/stock")
+    public void downloadStock(HttpServletResponse response) throws IOException {
+
+        //https://cursache.wordpress.com/2016/02/02/integrating-spring-mvc-and-apache-poi/
+        LocalDate today = LocalDate.now();
+        System.out.println(today.toString());
+        String magazyn = "Magazyn_"+today.toString()+".xlsx";
+
+        XSSFWorkbook wb = null;
+        try{
+          wb = stockService.getAllStock();
+          response.setContentType("application/vnd.ms-excel");
+          response.setHeader("Content-disposition", "attachment; filename="+magazyn);
+          wb.write(response.getOutputStream());
+        }catch (IOException ioe) {
+            throw new RuntimeException("Bład zapisu magazynu do pliku excel");
+        } finally {
+            System.out.println("Powodzenie zapisu magazynu do pliku");
+        }
+
+    }
+
+
+
+
 }
-
-
-
-
-
-
-
 
 
 

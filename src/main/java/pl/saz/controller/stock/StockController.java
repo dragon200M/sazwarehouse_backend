@@ -1,11 +1,14 @@
 package pl.saz.controller.stock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.saz.model.komponent.KomponentModel;
+import pl.saz.model.stock.MaxToDo;
 import pl.saz.model.stock.StockListUpdate;
 import pl.saz.model.stock.StockModel;
 import pl.saz.model.stock.StockSummary;
@@ -23,6 +26,8 @@ import java.util.List;
 @RequestMapping(value = "/stock")
 public class StockController {
 
+    private static final Logger logger = LoggerFactory.getLogger(StockController.class);
+
     @Autowired
     private StockService stockService;
     @Autowired
@@ -39,6 +44,7 @@ public class StockController {
         if(check){
             headers.set("Stock",stockModel.get_id().get_wName()+":"
                     +stockModel.get_id().get_kName()+":"+Double.toString(stockModel.get_stock()));
+
             return new ResponseEntity<String>("Stock was added",headers,HttpStatus.CREATED);
         }
         headers.set("Failure",stockModel.get_id().get_wName()+":"
@@ -114,10 +120,10 @@ public class StockController {
     @RequestMapping(value = "/update/{war}/{kom}/{quantity}", method = RequestMethod.POST)
     public ResponseEntity<String> updateStock2(@PathVariable String war,
                                                @PathVariable String kom,
-                                               @PathVariable Double quantity) {
+                                               @PathVariable String quantity) {
 
         if(null != war && null != kom && null != quantity){
-            stockService.updateStock(war,kom,quantity);
+            stockService.updateStock(war,kom,Double.parseDouble(quantity));
             return new ResponseEntity<String>("Updated", HttpStatus.OK);
         }
 
@@ -127,6 +133,9 @@ public class StockController {
 
     @RequestMapping(value = "/getAll",method = RequestMethod.GET)
     public ResponseEntity<List<StockModel>> getAllStock(){
+
+        logger.info("Pobieranie informacji o stanie magazynu");
+
         List<StockModel> w = stockService.getAll();
 
         return new ResponseEntity<List<StockModel>>(w, HttpStatus.OK);
@@ -138,6 +147,21 @@ public class StockController {
 
         return new ResponseEntity<List<StockModel>>(w, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/getByComponent/{war}",method = RequestMethod.GET)
+    public ResponseEntity<List<StockModel>> getAllByKoponent(@PathVariable String war){
+        List<StockModel> w = stockService.getByKomponent(war);
+
+        return new ResponseEntity<List<StockModel>>(w, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getById/{war}/{komp}",method = RequestMethod.GET)
+    public ResponseEntity<StockModel> getAllById(@PathVariable String war,@PathVariable String komp){
+        StockModel w = stockService.getById(war,komp);
+
+        return new ResponseEntity<StockModel>(w, HttpStatus.OK);
+    }
+
 
 
 
@@ -162,11 +186,41 @@ public class StockController {
         return new ResponseEntity<List<StockSummary>>(w, HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/getRollerStockView",method = RequestMethod.GET)
+    public ResponseEntity<List<StockModel.StockModelView>> getStockViewRoller(){
+        List<StockModel.StockModelView> w = stockService.getRolleStockView();
+
+        return new ResponseEntity<List<StockModel.StockModelView>>(w, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/getStockView/{war}",method = RequestMethod.GET)
+    public ResponseEntity<List<StockModel.StockModelView>> getStockView(@PathVariable String war){
+        List<StockModel.StockModelView> w = stockService.getStockView(war);
+
+        return new ResponseEntity<List<StockModel.StockModelView>>(w, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getStockViewAll",method = RequestMethod.GET)
+    public ResponseEntity<List<StockModel.StockModelView>> getStockViewALL(){
+        List<StockModel.StockModelView> w = stockService.getStockViewAll();
+
+        return new ResponseEntity<List<StockModel.StockModelView>>(w, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/getPieceQuantity",method = RequestMethod.PUT)
     public ResponseEntity<List<StockListUpdate>> getPieceQuantity(@RequestBody List<StockListUpdate> list){
         List<StockListUpdate> w = stockService.getPieceQuantity(list);
 
         return new ResponseEntity<List<StockListUpdate>>(w, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getMaxtodo",method = RequestMethod.GET)
+    public ResponseEntity<List<MaxToDo>> getMax(){
+        List<MaxToDo> w = stockService.getPosibleToDo();
+
+        return new ResponseEntity<List<MaxToDo>>(w, HttpStatus.OK);
     }
 
 

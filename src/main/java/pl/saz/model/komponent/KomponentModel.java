@@ -178,13 +178,32 @@ public class KomponentModel implements Serializable {
         return _units;
     }
 
+
+    @Override
+    public String toString() {
+        return "KomponentModel{" +
+                "_name='" + _name + '\'' +
+                ", _description='" + _description + '\'' +
+                ", _material='" + _material + '\'' +
+                ", _typ_1=" + _typ_1 +
+                ", _units=" + _units +
+                ", _weight=" + _weight +
+                '}';
+    }
+
     public void set_units(Units _units) {
         if(null == this._units){this._units = Units.PIECE;}
         this._units = _units;
     }
 
     public void add_Child(KomponentModel child, int ilosc){
-        if(ilosc<0){ilosc = 0;};
+        if(ilosc<0){ilosc = 0;}
+
+        if(this.get_typ_1() == Types.TASMA){
+            if(ilosc > 1){ilosc = 0;}
+            if(child.get_typ_1() != Types.SZTUKA){ilosc = 0;}
+        };
+
         if(this.get_typ_1() != Types.PUSTY && this.get_typ_1() != Types.SZTUKA) {
             if (this._childsElement.size() > 0) {
                 this._childsElement.removeIf(c -> c.get_name().equals(child.get_name()));
@@ -193,7 +212,10 @@ public class KomponentModel implements Serializable {
                 this._childsElement.add(child);
             }
         }
+
     }
+
+
 
     public List<Calculation> calc(){
         Calculation c = new Calculation();
@@ -251,7 +273,7 @@ public class KomponentModel implements Serializable {
                         }else {
                             sum.put(w.get_name(),1);
                         }
-                    }else if(w.get_typ_1() != Types.SZTUKA && w.get_typ_1() != Types.PUSTY)
+                    }else if(w.get_typ_1() != Types.SZTUKA)
                     {
                         recursion(w);
                     }
@@ -268,18 +290,19 @@ public class KomponentModel implements Serializable {
 
 
         public void recursion(KomponentModel c) {
+
             for (KomponentModel k:
-                 c.get_childsElement()) {
-                if(c.get_typ_1() == Types.SZTUKA) {
-                    System.out.println("sztuka: "+k.get_name());
-                    return;
-                }else{
+              c.get_childsElement()) {
+
+                if(k.get_typ_1()!=Types.SZTUKA){
+                    recursion(k);
+                }else {
                     if(sum.containsKey(k.get_name())){
                         sum.put(k.get_name(),sum.get(k.get_name())+1);
-                    }else {
+                    }else{
+
                         sum.put(k.get_name(),1);
                     }
-                    recursion(k);
                 }
             }
         }
@@ -290,6 +313,14 @@ public class KomponentModel implements Serializable {
 
         public void set_resoult(List<Calculation> _resoult) {
             this._resoult = _resoult;
+        }
+
+        @Override
+        public String toString() {
+            return "Calculation{" +
+                    "_childComponentName='" + _childComponentName + '\'' +
+                    ", _quantity=" + _quantity +
+                    '}';
         }
     }
 

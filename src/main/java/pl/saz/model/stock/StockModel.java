@@ -1,10 +1,14 @@
 package pl.saz.model.stock;
 
 import pl.saz.model.komponent.KomponentModel;
+import pl.saz.model.komponent.Types;
+import pl.saz.model.komponent.Units;
 import pl.saz.model.warehouse.WarehouseModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by maciej on 01.05.18.
@@ -125,13 +129,28 @@ public class StockModel implements Serializable{
         private String wareName;
         private String komName;
         private String komDesc;
+        private Types types;
+        private Units units;
         private Double stock;
+        private List<PosibleToDo> posible = new ArrayList<PosibleToDo>();
 
         public StockModelView(){
             this.wareName = StockModel.this.getWarehouse().get_name();
             this.komName = StockModel.this.getComponent().get_name();
             this.komDesc = StockModel.this.getComponent().get_description();
             this.stock = StockModel.this.get_stock();
+            this.types = StockModel.this.getComponent().get_typ_1();
+            this.units = StockModel.this.getComponent().get_units();
+
+            if(StockModel.this.getComponent().get_typ_1() == Types.TASMA) {
+                KomponentModel tmp = StockModel.this.getComponent();
+                tmp.get_childsElement().forEach( w -> {
+                    if(w.get_weight()>0) {
+
+                        posible.add(new PosibleToDo(w.get_name(), new Double(StockModel.this.get_stock() / w.get_weight()).intValue()));
+                    }
+                });
+            }
         }
 
         public StockModelView(String wareName, String komName, String komDesc, Double stock) {
@@ -139,6 +158,32 @@ public class StockModel implements Serializable{
             this.komName = komName;
             this.komDesc = komDesc;
             this.stock = stock;
+            if(StockModel.this.getComponent().get_typ_1() == Types.TASMA) {
+                KomponentModel tmp = StockModel.this.getComponent();
+                tmp.get_childsElement().forEach( w -> {
+                    if(w.get_weight()>0) {
+                        posible.add(new PosibleToDo(w.get_name(), new Double(StockModel.this.get_stock() / w.get_weight()).intValue()));
+                    }
+                });
+            }
+            this.types = StockModel.this.getComponent().get_typ_1();
+            this.units = StockModel.this.getComponent().get_units();
+        }
+
+        public Types getTypes() {
+            return types;
+        }
+
+        public void setTypes(Types types) {
+            this.types = types;
+        }
+
+        public Units getUnits() {
+            return units;
+        }
+
+        public void setUnits(Units units) {
+            this.units = units;
         }
 
         public String getWareName() {
@@ -171,6 +216,54 @@ public class StockModel implements Serializable{
 
         public void setStock(Double stock) {
             this.stock = stock;
+        }
+
+        public List<PosibleToDo> getPosible() {
+            if(posible.size() > 0){
+                posible.forEach( p -> System.out.println(p.toString()));
+            }
+            return posible;
+        }
+
+        public void setPosible(List<PosibleToDo> posible) {
+            this.posible = posible;
+        }
+
+    }
+
+    public class PosibleToDo{
+        private String komponentName;
+        private Integer posible;
+
+        public PosibleToDo(){};
+
+        public PosibleToDo(String komponentName, Integer posible) {
+            this.komponentName = komponentName;
+            this.posible = posible;
+        }
+
+        public String getKomponentName() {
+            return komponentName;
+        }
+
+        public void setKomponentName(String komponentName) {
+            this.komponentName = komponentName;
+        }
+
+        public Integer getPosible() {
+            return posible;
+        }
+
+        public void setPosible(Integer posible) {
+            this.posible = posible;
+        }
+
+        @Override
+        public String toString() {
+            return "PosibleToDo{" +
+                    "komponentName='" + komponentName + '\'' +
+                    ", posible=" + posible +
+                    '}';
         }
     }
 

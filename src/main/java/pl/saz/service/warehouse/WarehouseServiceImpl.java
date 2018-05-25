@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
 
+
+
     @Autowired
     private WarehouseDao warehouseDao;
 
@@ -42,7 +44,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         if(operation) {
             Gson gson = new Gson();
             String json = gson.toJson(warehouse,WarehouseModel.class);
-            OperationRecords op = new OperationRecords(OperationTypes.INSERT,json);
+            OperationRecords op = new OperationRecords(OperationTypes.INSERT,json,WarehouseModel.class.getSimpleName());
             recordService.saveRecords(op);
         }
 
@@ -55,7 +57,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         if(null != tmp) {
             Gson gson = new Gson();
             String json = gson.toJson(tmp,WarehouseModel.class);
-            OperationRecords op = new OperationRecords(OperationTypes.UPDATE,json);
+            OperationRecords op = new OperationRecords(OperationTypes.UPDATE,json,WarehouseModel.class.getSimpleName());
             recordService.saveRecords(op);
         }
 
@@ -68,7 +70,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             warehouseDao.deleteWarehouse(warehouse);
             Gson gson = new Gson();
             String json = gson.toJson(warehouse,WarehouseModel.class);
-            OperationRecords op = new OperationRecords(OperationTypes.DELETE,json);
+            OperationRecords op = new OperationRecords(OperationTypes.DELETE,json,WarehouseModel.class.getSimpleName());
             recordService.saveRecords(op);
         }
     }
@@ -90,7 +92,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
             Gson gson = new Gson();
             String json = gson.toJson(tmp,WarehouseModel.class);
-            OperationRecords op = new OperationRecords(OperationTypes.UPDATE,json);
+            OperationRecords op = new OperationRecords(OperationTypes.UPDATE,json,WarehouseModel.class.getSimpleName());
             recordService.saveRecords(op);
 
             return tmp.is_available();
@@ -108,7 +110,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
             Gson gson = new Gson();
             String json = gson.toJson(tmp,WarehouseModel.class);
-            OperationRecords op = new OperationRecords(OperationTypes.UPDATE,json);
+            OperationRecords op = new OperationRecords(OperationTypes.UPDATE,json,WarehouseModel.class.getSimpleName());
             recordService.saveRecords(op);
 
             return tmp.is_available();
