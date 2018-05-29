@@ -8,6 +8,7 @@ import pl.saz.dao.stock.StockOperation;
 public class StockListUpdate {
     private String warehouseName;
     private String komponentName;
+    private Double oldStock;
     private Double newStock;
     private StockOperation type;
 
@@ -50,6 +51,14 @@ public class StockListUpdate {
 
     public void setType(StockOperation type) {
         this.type = type;
+    }
+
+    public Double getOldStock() {
+        return oldStock;
+    }
+
+    public void setOldStock(Double oldStock) {
+        this.oldStock = oldStock;
     }
 
     @Override

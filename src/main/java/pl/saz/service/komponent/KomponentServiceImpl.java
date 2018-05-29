@@ -61,6 +61,7 @@ public class KomponentServiceImpl implements KomponentService {
             String json = gson.toJson(komponentModel,KomponentModel.class);
             OperationRecords op = new OperationRecords(OperationTypes.INSERT,json,KomponentModel.class.getSimpleName());
             recordService.saveRecords(op);
+
         }
 
         return operation;

@@ -320,10 +320,12 @@ public class StockServiceImpl implements StockService {
                  if(null != kw) {
                      System.out.println("dodawanie magazynu do komponentu");
                      StockListUpdate stu = new StockListUpdate(kw.getWarehouse().get_name(),s, i.doubleValue(),StockOperation.REMOVE);
+                     stu.setOldStock(kw.get_stock());
                      tmp.add(stu);
                  }else{
                      System.out.println("dodawanie magazynu do komponentu 2");
                      StockListUpdate stu = new StockListUpdate("",s, i.doubleValue(),StockOperation.REMOVE);
+                     stu.setOldStock(0.0);
                      tmp.add(stu);
                  }
               });

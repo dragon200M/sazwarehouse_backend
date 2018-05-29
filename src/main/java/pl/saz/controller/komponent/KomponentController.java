@@ -22,27 +22,31 @@ public class KomponentController {
 
 
     @RequestMapping(value = "/new",method = RequestMethod.POST)
-    public ResponseEntity<String> saveKomoponent(@RequestBody KomponentModel komponent){
+    public ResponseEntity<KomponentModel> saveKomoponent(@RequestBody KomponentModel komponent){
         HttpHeaders headers = new HttpHeaders();
 
         boolean check = komponentService.saveKomponent(komponent);
 
         if(check){
             headers.set("KomponentNew",komponent.get_name());
-            return new ResponseEntity<String>("Komponent was added",headers,HttpStatus.CREATED);
+            return new ResponseEntity<KomponentModel>(komponent,headers,HttpStatus.CREATED);
         }
         headers.set("Failure",komponent.get_name());
 
-        return new ResponseEntity<String>("",headers,HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<KomponentModel>(new KomponentModel(),headers,HttpStatus.NOT_MODIFIED);
     }
 
     @RequestMapping(value = "/update/{name}", method = RequestMethod.POST)
-    public ResponseEntity<String> updateKomponent(@RequestBody KomponentModel komponentModel, @PathVariable String name) {
+    public ResponseEntity<KomponentModel> updateKomponent(@RequestBody KomponentModel komponentModel, @PathVariable String name) {
+        HttpHeaders headers = new HttpHeaders();
+
         if(komponentModel.get_name().equals(name)){
+            headers.set("KomponentUpdated",komponentModel.get_name());
             komponentService.updateKomponent(komponentModel);
-            return new ResponseEntity<String>("Updated:"+komponentModel.get_name(), HttpStatus.OK);
+            return new ResponseEntity<KomponentModel>(komponentModel,headers, HttpStatus.OK);
         }
-        return new ResponseEntity<String>("Doesn't exists:"+komponentModel.get_name(), HttpStatus.NOT_MODIFIED);
+        headers.set("Failure",komponentModel.get_name());
+        return new ResponseEntity<KomponentModel>(komponentModel, headers,HttpStatus.NOT_MODIFIED);
     }
 
 
