@@ -339,9 +339,8 @@ public class StockServiceImpl implements StockService {
         List<KomponentModel> komponents ;
 
 
+
         List<StockModel> tmp = stockDao.getAll().stream().filter(st -> st.getComponent().get_typ_1() == Types.SZTUKA).collect(Collectors.toList());
-
-
 
 
         Map<String,Double> wynik = tmp.stream().collect(Collectors.groupingBy(k->k.getComponent()
@@ -355,8 +354,9 @@ public class StockServiceImpl implements StockService {
         List<MaxToDo> m = new ArrayList<MaxToDo>();
           komponents.forEach(el -> {
               el.calc().forEach(b -> {
-
-                    m.add(new MaxToDo(el.get_name(), new Double(wynik.get(b.get_childComponentName()) / b.get_quantity()).intValue()));
+                  if(null != wynik.get(b.get_childComponentName()) ){
+                      m.add(new MaxToDo(el.get_name(), new Double(wynik.get(b.get_childComponentName()) / b.get_quantity()).intValue()));
+                  }
               });
           });
 

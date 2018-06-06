@@ -85,16 +85,24 @@ public class KomponentController {
     public ResponseEntity<String> addChildToParent(
             @PathVariable String parent,@PathVariable String child, @PathVariable Integer ilosc)
     {
+        String wynik = "{\"resoult\":\"Failure\"}";
+        boolean check = false;
         if(!parent.equals(child) && ilosc > 0){
-            komponentService.addChildToParent(parent,child,ilosc);
+           check = komponentService.addChildToParent(parent,child,ilosc);
         }
-        return new ResponseEntity<String>("Failure",HttpStatus.NOT_MODIFIED);
+        if(check){
+            wynik = "{\"resoult\":\"Success\"}";
+            return new ResponseEntity<String>(wynik,HttpStatus.OK);
+        }
+
+        return new ResponseEntity<String>(wynik,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{name}", method = RequestMethod.DELETE)
     public ResponseEntity<String> delete(@PathVariable String name) {
         KomponentModel tmp = komponentService.getKomponentByName(name);
         String stock = komponentService.getStockInfo(name);
+
 
         HttpHeaders headers = new HttpHeaders();
         if(null != tmp && null == stock) {
@@ -114,16 +122,33 @@ public class KomponentController {
     public ResponseEntity<String> deleteChild(@PathVariable String parent,@PathVariable String child) {
         KomponentModel p = komponentService.getKomponentByName(parent);
         KomponentModel c = komponentService.getKomponentByName(child);
-        HttpHeaders headers = new HttpHeaders();
+
+        String wynik = "{\"resoult\":\"Failure\"}";
 
         if(null != p && null != c) {
             komponentService.deleteKomponentChild(p,c);
-            return new ResponseEntity<String>("deleted:", HttpStatus.OK);
+            wynik = "{\"resoult\":\"Success\"}";
+            return new ResponseEntity<String>(wynik, HttpStatus.OK);
         }
 
-        return new ResponseEntity<String>("failure", HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<String>(wynik, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getAllParents/{child}", method = RequestMethod.GET)
+    public  ResponseEntity<List<String>> getAllParents(@PathVariable String child) {
+
+        List<String> wynik = komponentService.getParents(child);
+        HttpHeaders headers = new HttpHeaders();
+
+        return new ResponseEntity<List<String>>(wynik, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/printParents/{parent}", method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.OK)
+    public void printParent(@PathVariable String parent) {
+        komponentService.printAllParents(parent);
+    }
 
 
     @RequestMapping(value = "/start", method = RequestMethod.POST)
@@ -136,6 +161,8 @@ public class KomponentController {
     public void start2() {
         komponentService.saveTest2();
     }
+
+
 
 
     @RequestMapping(value = "/getSummary/{name}", method = RequestMethod.GET)

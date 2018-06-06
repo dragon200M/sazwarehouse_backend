@@ -30,14 +30,36 @@ public class KomponentServiceImpl implements KomponentService {
 
 
     private List<String> wynik = new ArrayList<String>();
+
     @Override
     public void findAllParents(String kompoenentName) {
         List<KomponentModel> k = getParentsOfChild(kompoenentName);
-
         k.forEach( w -> {
             wynik.add(w.get_name());
             findAllParents(w.get_name());
         });
+    }
+    public void findAllParentsStart(String kompoenentName) {
+        wynik.clear();
+        findAllParents(kompoenentName);
+    }
+
+    @Override
+    public void printAllParents(String kompoenentName) {
+        findAllParentsStart(kompoenentName);
+
+        if(wynik.size() > 0) {
+            System.out.println("ILOSC:"+ wynik.size());
+            for(String k: wynik){
+                System.out.println(k);
+            }
+        }
+    }
+
+    @Override
+    public List<String> getParents(String kompoenentName) {
+        findAllParentsStart(kompoenentName);
+        return wynik;
     }
 
     @Override
@@ -47,7 +69,6 @@ public class KomponentServiceImpl implements KomponentService {
 
     @Override
     public List<KomponentModel> getAllKomponents() {
-
 
         return komponentDao.getAllKomponents();
     }
@@ -103,11 +124,11 @@ public class KomponentServiceImpl implements KomponentService {
     }
 
     @Override
-    public void addChildToParent(String kompoenentName, String childName, int ilosc) {
+    public boolean addChildToParent(String kompoenentName, String childName, int ilosc) {
        KomponentModel parent = getKomponentByName(kompoenentName);
        KomponentModel child  = getKomponentByName(childName);
 
-       findAllParents(kompoenentName);
+       findAllParentsStart(kompoenentName);
        if(wynik.contains(childName)){
            wynik.forEach(w -> System.out.println(w));
        }
@@ -133,8 +154,11 @@ public class KomponentServiceImpl implements KomponentService {
            String json = gson.toJson(parent,KomponentModel.class);
            OperationRecords op = new OperationRecords(OperationTypes.UPDATE,json,KomponentModel.class.getSimpleName());
            recordService.saveRecords(op);
+           return true;
        }
         wynik.clear();
+
+       return false;
     }
 
 

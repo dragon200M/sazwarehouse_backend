@@ -17,8 +17,10 @@ public interface KomponentService {
     KomponentModel updateKomponent(KomponentModel komponentModel);
     void deleteKomponent(KomponentModel kompoenentName);
     void deleteKomponentChild(KomponentModel kompoenentName,KomponentModel childName);
-    void addChildToParent(String kompoenentName,String childName,int ilosc);
+    boolean addChildToParent(String kompoenentName,String childName,int ilosc);
     void saveTest();
     void saveTest2();
     void findAllParents(String kompoenentName);
+    void printAllParents(String kompoenentName);
+    List<String> getParents(String kompoenentName);
 }
