@@ -121,6 +121,21 @@ public class KomponentDaoImpl implements KomponentDao {
 
         return info;
     }
+
+    @Override
+    public List<KomponentModel> getKomponentsWihoutStock() {
+        List<KomponentModel> or = new ArrayList<KomponentModel>();
+        try {
+            or = manager.createNativeQuery("SELECT distinct c.* FROM STOCK s " +
+                    "right join COMPONENTS  c on s.COMPONENTPK =c.name " +
+                    "where s.COMPONENTPK is null", KomponentModel.class)
+                    .getResultList();
+        }catch (NoResultException e){
+            System.out.println("Brak wynikow");
+        }
+
+        return or;
+    }
 }
 
 

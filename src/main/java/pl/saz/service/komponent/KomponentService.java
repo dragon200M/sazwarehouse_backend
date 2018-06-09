@@ -23,4 +23,6 @@ public interface KomponentService {
     void findAllParents(String kompoenentName);
     void printAllParents(String kompoenentName);
     List<String> getParents(String kompoenentName);
+    List<KomponentModel> getKomponentsWihoutStock();
+    List<String> getKomponentsNameWihoutStock();
 }

@@ -380,15 +380,19 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void deleteStock(String w, String k) {
+    public boolean deleteStock(String w, String k) {
         StockModel st = stockDao.getById(w, k);
         if (null != st) {
-            Gson gson = new Gson();
-            String json = gson.toJson(st,StockModel.class);
-            OperationRecords op = new OperationRecords(OperationTypes.DELETE,json);
-
-            stockDao.deleteStock(st);
+            if(st.get_stock() == 0){
+                Gson gson = new Gson();
+                String json = gson.toJson(st,StockModel.class);
+                OperationRecords op = new OperationRecords(OperationTypes.DELETE,json);
+                stockDao.deleteStock(st);
+                return true;
+            }
+            return false;
         }
+        return false;
     }
 
     @Override

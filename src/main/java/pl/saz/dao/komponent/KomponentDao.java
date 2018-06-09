@@ -16,4 +16,5 @@ public interface KomponentDao {
     void deleteKomponentChild(KomponentModel parent,KomponentModel child);
     List<KomponentModel> getParentsOfChild(String name);
     String getStockInfo(String name);
+    List<KomponentModel> getKomponentsWihoutStock();
 }

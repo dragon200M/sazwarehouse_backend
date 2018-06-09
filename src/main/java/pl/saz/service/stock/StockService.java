@@ -28,7 +28,7 @@ public interface StockService {
     boolean saveStock(StockModel stock);
     boolean saveStock(String w,String k,Double q);
     void deleteStock(StockModel stockModel);
-    void deleteStock(String w,String k);
+    boolean deleteStock(String w,String k);
     StockModel updateStock(WarehouseModel warehouse,KomponentModel komponent, Double stock);
     StockModel updateStock(String warehouse,String komponent, Double stock);
     List<StockListUpdate> updateStocks(List<StockListUpdate> newStock);

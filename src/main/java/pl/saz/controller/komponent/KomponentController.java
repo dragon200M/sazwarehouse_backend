@@ -143,6 +143,27 @@ public class KomponentController {
         return new ResponseEntity<List<String>>(wynik, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getStockFree", method = RequestMethod.GET)
+    public  ResponseEntity<List<String>> getAllKomponentsWithoutStock() {
+        List<String> wynik = komponentService.getKomponentsNameWihoutStock();
+
+
+        HttpHeaders headers = new HttpHeaders();
+
+        return new ResponseEntity<List<String>>(wynik, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/getStockFreeAll", method = RequestMethod.GET)
+    public  ResponseEntity<List<KomponentModel>> getKomponentsWithoutStock() {
+        List<KomponentModel> wynik = komponentService.getKomponentsWihoutStock();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        return new ResponseEntity<List<KomponentModel>>(wynik, HttpStatus.OK);
+    }
+
+
 
     @RequestMapping(value = "/printParents/{parent}", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)

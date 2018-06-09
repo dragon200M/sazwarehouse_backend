@@ -59,39 +59,47 @@ public class StockController {
                                              @PathVariable String kom,
                                              @PathVariable Double quantity){
         HttpHeaders headers = new HttpHeaders();
-
+        String wynik = "{\"resoult\":\"Failure\"}";
         boolean check = stockService.saveStock(war, kom, quantity);
 
         if(check){
             headers.set("Stock"," OK");
-            return new ResponseEntity<String>("Stock was added",headers,HttpStatus.CREATED);
+            wynik = "{\"resoult\":\"Success\"}";
+            return new ResponseEntity<String>(wynik,headers,HttpStatus.OK);
         }
         headers.set("Failure"," ERROR");
 
-        return new ResponseEntity<String>("",headers,HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<String>(wynik,headers,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteStock(@RequestBody StockModel stockModel){
         HttpHeaders headers = new HttpHeaders();
-
+        String wynik = "{\"resoult\":\"Success\"}";
         stockService.deleteStock(stockModel);
 
         headers.set("Delete"," ");
 
-        return new ResponseEntity<String>("",headers,HttpStatus.OK);
+        return new ResponseEntity<String>(wynik,headers,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{war}/{kom}",method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteStock2(@PathVariable String war,
                                                @PathVariable String kom){
         HttpHeaders headers = new HttpHeaders();
-
-        stockService.deleteStock(war, kom);
-
         headers.set("Delete"," ");
 
-        return new ResponseEntity<String>("",headers,HttpStatus.OK);
+        String wynik = "{\"resoult\":\"Failure\"}";
+
+        boolean check = stockService.deleteStock(war, kom);
+
+        if(check){
+            wynik = "{\"resoult\":\"Success\"}";
+            return new ResponseEntity<String>(wynik,headers,HttpStatus.OK);
+        }
+
+
+        return new ResponseEntity<String>(wynik,headers,HttpStatus.OK);
     }
 
 

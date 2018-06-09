@@ -23,4 +23,5 @@ public interface StockDao {
     StockModel updateStock(String warehouse,String komponent, Double stock);
     List<StockListUpdate> updateStock(List<StockListUpdate> updates);
     void deleteStock(StockModel stock);
+
 }

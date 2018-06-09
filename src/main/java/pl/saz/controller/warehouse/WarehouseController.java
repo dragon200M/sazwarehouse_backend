@@ -51,11 +51,17 @@ public class WarehouseController {
 
     @RequestMapping(value = "/update/{name}", method = RequestMethod.POST)
     public ResponseEntity<String> updateWarehouse(@RequestBody WarehouseModel warehouse,@PathVariable String name) {
-        if(warehouse.get_name().equals(name)){
-            warehouseService.updateWarehouse(warehouse);
-            return new ResponseEntity<String>("Updated:"+warehouse.get_name(), HttpStatus.OK);
+        String wynik = "{\"resoult\":\"Failure\"}";
+
+        if(!name.equals("undefined")){
+            if(warehouse.get_name().equals(name)){
+                warehouseService.updateWarehouse(warehouse);
+                wynik = "{\"resoult\":\"Success\"}";
+                return new ResponseEntity<String>(wynik, HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<String>("Doesn't exists:"+warehouse.get_name(), HttpStatus.NOT_MODIFIED);
+
+        return new ResponseEntity<String>(wynik, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/setVisible/{name}", method = RequestMethod.POST)

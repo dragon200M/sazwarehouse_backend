@@ -184,6 +184,30 @@ public class KomponentServiceImpl implements KomponentService {
     }
 
     @Override
+    public List<KomponentModel> getKomponentsWihoutStock() {
+        List<KomponentModel> tmp = komponentDao.getKomponentsWihoutStock();
+
+        return tmp;
+    }
+
+    @Override
+    public List<String> getKomponentsNameWihoutStock() {
+        List<String> tmp = new ArrayList<String>();
+        List<KomponentModel> km = komponentDao.getKomponentsWihoutStock();
+
+        if(null != km) {
+            if(km.size() > 0){
+              tmp = new ArrayList<String>();
+              for (KomponentModel k : km ) {
+                  tmp.add(k.get_name());
+              }
+            }
+        }
+
+        return tmp;
+    }
+
+    @Override
     public void saveTest() {
 
         for(int i=0;i<100;i++){
