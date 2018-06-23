@@ -37,6 +37,10 @@ public class WarehouseModel implements Serializable{
     }
 
     public void set_name(String _name) {
+
+        if(null == _name){
+            _name ="";
+        }
         this._name = _name;
     }
 
@@ -45,6 +49,10 @@ public class WarehouseModel implements Serializable{
     }
 
     public void set_description(String _description) {
+
+        if(null == _description){
+            _description ="";
+        }
         this._description = _description;
     }
 
@@ -53,6 +61,8 @@ public class WarehouseModel implements Serializable{
     }
 
     public void set_available(boolean _available) {
+
+
         this._available = _available;
     }
 

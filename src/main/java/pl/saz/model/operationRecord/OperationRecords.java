@@ -1,5 +1,6 @@
 package pl.saz.model.operationRecord;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import pl.saz.utils.CompressionUtils;
 
 import javax.persistence.*;
@@ -33,6 +34,7 @@ public class OperationRecords {
     @Column(name = "ClassName")
     private String _className = "";
 
+    @JsonIgnore
     @Column(length = 2000000)
     private byte[] inBinary;
 
@@ -74,6 +76,11 @@ public class OperationRecords {
     }
 
     public String get_objectDescription() {
+        if(inBinary.length > 0){
+            return new String(inBinary);
+
+        }
+
         return _objectDescription;
     }
 
@@ -112,7 +119,7 @@ public class OperationRecords {
         try {
             w = CompressionUtils.compress(_objectDescription.getBytes(StandardCharsets.UTF_8));
             String str = new String(CompressionUtils.decompress(w),"UTF-8");
-            System.out.println(str);
+
 
         } catch (IOException e){
             System.out.println(e);

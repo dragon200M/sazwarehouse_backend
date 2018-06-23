@@ -2,6 +2,8 @@ package pl.saz.dao.komponent;
 
 import org.springframework.stereotype.Repository;
 import pl.saz.model.komponent.KomponentModel;
+import pl.saz.model.komponent.KomponentsQuantity;
+import pl.saz.model.komponent.Types;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -9,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by maciej on 01.05.18.
@@ -62,12 +65,21 @@ public class KomponentDaoImpl implements KomponentDao {
     public KomponentModel updateKomponent(KomponentModel komponentModel) {
         KomponentModel t = getKomponentByName(komponentModel.get_name());
 
-        List<KomponentModel> tmpChild = t.get_childsElement();
+        t.set_name(komponentModel.get_name());
+        t.set_description(komponentModel.get_description());
+        t.set_weight(komponentModel.get_weight());
+        t.set_sortorder(komponentModel.get_sortorder());
+        t.set_material(komponentModel.get_material());
+        t.set_typ_1(komponentModel.get_typ_1());
+        t.set_typ_2(Types.PUSTY);
+        t.set_typ_3(Types.PUSTY);
+        t.set_units(komponentModel.get_units());
+        t.set_dimension_X(komponentModel.get_dimension_X());
+        t.set_dimension_Y(komponentModel.get_dimension_Y());
+        t.set_dimension_Z(komponentModel.get_dimension_Z());
+        t.setChildSize(t.get_childsElement().size());
 
-        komponentModel.set_childsElement(tmpChild);
-
-
-        return manager.merge(komponentModel);
+        return manager.merge(t);
     }
 
     @Override
@@ -81,8 +93,12 @@ public class KomponentDaoImpl implements KomponentDao {
        if(null != k && !parent.equals(child)){
            if(k.get_childsElement().size() > 0) {
                List<KomponentModel> ktmp = k.get_childsElement();
+               Set<KomponentsQuantity> qtmp = k.getKomponentQuntity();
                ktmp.removeIf(w -> w.get_name().equals(child.get_name()));
+               qtmp.removeIf(s -> s.getKomponentName().equals(child.get_name()));
                k.set_childsElement(ktmp);
+               k.setKomponentQuntity(qtmp);
+
                updateKomponent(k);
            }
        }

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.saz.model.komponent.KomponentModel;
+import pl.saz.model.komponent.KomponentRecords;
+import pl.saz.model.komponent.KomponentsQuantity;
 import pl.saz.service.komponent.KomponentService;
 
 import java.util.List;
@@ -58,11 +60,20 @@ public class KomponentController {
         return new ResponseEntity<List<KomponentModel>>(k,HttpStatus.OK);
     }
 
+
+
     @RequestMapping(value = "/getMain", method = RequestMethod.GET)
     public ResponseEntity<List<KomponentModel>> getMainKomponents(){
         List<KomponentModel> k = komponentService.getMainKomponents();
 
         return new ResponseEntity<List<KomponentModel>>(k,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getMainRecords", method = RequestMethod.GET)
+    public ResponseEntity<List<KomponentRecords>> getMainKomponentRecords(){
+        List<KomponentRecords> k = komponentService.getMainKomponentRecords();
+
+        return new ResponseEntity<List<KomponentRecords>>(k,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getByName/{name}", method = RequestMethod.GET)
@@ -71,6 +82,19 @@ public class KomponentController {
 
 
         return new ResponseEntity<KomponentModel>(k,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getByNameRecords/{name}", method = RequestMethod.GET)
+    public ResponseEntity<KomponentRecords> getByNameRecords(@PathVariable String name){
+        KomponentRecords k = komponentService.getKomponentRecords(name);
+
+        return new ResponseEntity<KomponentRecords>(k,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getAllRecords", method = RequestMethod.GET)
+    public ResponseEntity<List<KomponentRecords>> getAllKomponentRecords(){
+        List<KomponentRecords> k = komponentService.getAllKomponentRecords();
+        return new ResponseEntity<List<KomponentRecords>>(k,HttpStatus.OK);
     }
 
 
@@ -142,6 +166,16 @@ public class KomponentController {
 
         return new ResponseEntity<List<String>>(wynik, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/getChildQuantity/{parent}", method = RequestMethod.GET)
+    public  ResponseEntity<List<KomponentsQuantity>> getQuantity(@PathVariable String parent) {
+
+        List<KomponentsQuantity> wynik = komponentService.komponentsQuantity(parent);
+        HttpHeaders headers = new HttpHeaders();
+
+        return new ResponseEntity<List<KomponentsQuantity>>(wynik, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/getStockFree", method = RequestMethod.GET)
     public  ResponseEntity<List<String>> getAllKomponentsWithoutStock() {

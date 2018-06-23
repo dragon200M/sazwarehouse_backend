@@ -123,6 +123,23 @@ public class StockModel implements Serializable{
         }
 
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof StockModelPK)) return false;
+
+            StockModelPK that = (StockModelPK) o;
+
+            if (_wName != null ? !_wName.equals(that._wName) : that._wName != null) return false;
+            return _kName != null ? _kName.equals(that._kName) : that._kName == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = _wName != null ? _wName.hashCode() : 0;
+            result = 31 * result + (_kName != null ? _kName.hashCode() : 0);
+            return result;
+        }
     }
 
     public class StockModelView{
@@ -219,9 +236,7 @@ public class StockModel implements Serializable{
         }
 
         public List<PosibleToDo> getPosible() {
-            if(posible.size() > 0){
-                posible.forEach( p -> System.out.println(p.toString()));
-            }
+
             return posible;
         }
 

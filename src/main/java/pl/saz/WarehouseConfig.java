@@ -13,7 +13,7 @@ import org.springframework.web.filter.CorsFilter;
  * Created by maciej on 01.05.18.
  */
 @Configuration
-public class WarehouseConfig {
+public class WarehouseConfig{
     @Bean
     ServletRegistrationBean h2servletRegistration(){
         ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());

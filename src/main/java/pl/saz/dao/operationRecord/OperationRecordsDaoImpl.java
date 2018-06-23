@@ -63,6 +63,24 @@ public class OperationRecordsDaoImpl implements OperationRecordsDao {
 
     @Override
     public List<OperationSummary> getOperationSummary(LocalDateTime startDate, LocalDateTime endDate) {
+
+
         return null;
+    }
+
+    @Override
+    public List<OperationRecords> getByDate(LocalDateTime startDate, LocalDateTime endDate) {
+
+        List<OperationRecords> or = null;
+        try {
+            or = manager.createNativeQuery("SELECT w.* FROM RECORDS w WHERE " +
+                    "OPERATION_DATE >= :start and OPERATION_DATE < :end", OperationRecords.class)
+                    .setParameter("start", startDate)
+                    .setParameter("end", endDate)
+                    .getResultList();
+        }catch (NoResultException e){
+            System.out.println("Brak wynikow");
+        }
+        return or;
     }
 }

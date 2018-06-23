@@ -1,6 +1,8 @@
 package pl.saz.service.komponent;
 
 import pl.saz.model.komponent.KomponentModel;
+import pl.saz.model.komponent.KomponentRecords;
+import pl.saz.model.komponent.KomponentsQuantity;
 
 import java.util.List;
 
@@ -25,4 +27,9 @@ public interface KomponentService {
     List<String> getParents(String kompoenentName);
     List<KomponentModel> getKomponentsWihoutStock();
     List<String> getKomponentsNameWihoutStock();
+    KomponentRecords setKomponentRecords(KomponentModel model);
+    KomponentRecords getKomponentRecords(String name);
+    List<KomponentRecords> getAllKomponentRecords();
+    List<KomponentRecords> getMainKomponentRecords();
+    List<KomponentsQuantity> komponentsQuantity(String parent);
 }

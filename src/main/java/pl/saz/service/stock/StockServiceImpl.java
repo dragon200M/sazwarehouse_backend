@@ -120,8 +120,12 @@ public class StockServiceImpl implements StockService {
 
             boolean operation = this.stockDao.saveStock(n);
             if(operation) {
+                WarehouseModel tmpW = new WarehouseModel(wt.get_name(),wt.get_description(),wt.is_available(),wt.get_visibleName());
+                KomponentModel tmpK = new KomponentModel(kt.get_name(),kt.get_description(),kt.get_typ_1(),kt.get_typ_2(),kt.get_typ_3(),kt.get_weight());
+                StockModel tmpS = new StockModel(tmpW,tmpK,q);
                 Gson gson = new Gson();
-                String json = gson.toJson(n,StockModel.class);
+                String json = gson.toJson(tmpS,StockModel.class);
+
                 OperationRecords op = new OperationRecords(OperationTypes.INSERT,json,StockModel.class.getSimpleName());
                 recordService.saveRecords(op);
 
@@ -175,11 +179,18 @@ public class StockServiceImpl implements StockService {
           });
 
          if(err[0]){
-            Type listTYPE = new TypeToken<List<StockListUpdate>>(){}.getType();
-            Gson gson = new Gson();
-            String json = gson.toJson(newStock,listTYPE);
-            OperationRecords p = new OperationRecords(OperationTypes.INSERT,json,StockListUpdate.class.getSimpleName());
-            recordService.saveRecords(p);
+             if(null != newStock){
+             if(newStock.size()>0) {
+                 for (Map.Entry<Integer, List<StockListUpdate>> entry : partitionArrayList(newStock, 10).entrySet()) {
+                     Type listTYPE = new TypeToken<List<StockListUpdate>>() {}.getType();
+
+                     Gson gson = new Gson();
+                     String json = gson.toJson(entry.getValue(), listTYPE);
+                     OperationRecords p = new OperationRecords(OperationTypes.INSERT, json, StockListUpdate.class.getSimpleName());
+                     recordService.saveRecords(p);
+                 }
+              }
+             }
          };
 
         return st;
@@ -318,12 +329,12 @@ public class StockServiceImpl implements StockService {
 
                  StockModel kw = getByKomponent(s).size() == 0 ? null : getByKomponent(s).get(0) ;
                  if(null != kw) {
-                     System.out.println("dodawanie magazynu do komponentu");
+
                      StockListUpdate stu = new StockListUpdate(kw.getWarehouse().get_name(),s, i.doubleValue(),StockOperation.REMOVE);
                      stu.setOldStock(kw.get_stock());
                      tmp.add(stu);
                  }else{
-                     System.out.println("dodawanie magazynu do komponentu 2");
+
                      StockListUpdate stu = new StockListUpdate("",s, i.doubleValue(),StockOperation.REMOVE);
                      stu.setOldStock(0.0);
                      tmp.add(stu);
@@ -508,7 +519,7 @@ public class StockServiceImpl implements StockService {
         List<KomponentModel> k = komponentService.getAllKomponents().stream().filter(x -> x.get_name().startsWith("MM")).collect(Collectors.toList());
         k.forEach( a -> {
             int randomStock = 1 +(int)(Math.random() * ((40000 -1)+1));
-            System.out.println(a.toString());
+
             StockModel tmp = new StockModel(w1,a, Double.parseDouble(Integer.toString(randomStock)));
             stockDao.saveStock(tmp);
 
@@ -516,5 +527,19 @@ public class StockServiceImpl implements StockService {
 
 
 
+    }
+
+    private Map<Integer,List<StockListUpdate>> partitionArrayList(List<StockListUpdate> arrayList, final int bucket) {
+        Map<Integer,List<StockListUpdate>> resoult = new HashMap<>();
+
+        int c = 0;
+        for(int i = 0; i < arrayList.size(); i +=bucket) {
+            resoult.put(c,new ArrayList<StockListUpdate>(
+               arrayList.subList(i, Math.min(arrayList.size(), i + bucket))
+            ));
+            c++;
+        }
+
+        return resoult;
     }
 }

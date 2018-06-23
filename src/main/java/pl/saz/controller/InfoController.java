@@ -39,7 +39,7 @@ public class InfoController {
                 String s2 = b.getKomName();
                 String s3 = b.getKomDesc();
                 Double d =  b.getStock();
-                System.out.println(s1+":"+s2+":"+s3+":"+Double.toString(d));
+
             w2.add(b);
         }
 

@@ -14,6 +14,7 @@ import java.util.List;
 public interface OperationRecordsDao {
     void saveRecords(OperationRecords records);
     List<OperationRecords> getAll();
+    List<OperationRecords> getByDate(LocalDateTime startDate, LocalDateTime endDate);
     String getByType(OperationTypes type);
     OperationRecords getByDate(LocalDateTime date);
     OperationSummary getOperationSummaryByType(OperationTypes type, LocalDateTime startDate, LocalDateTime endDate);

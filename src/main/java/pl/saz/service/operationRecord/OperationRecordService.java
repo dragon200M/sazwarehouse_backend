@@ -3,6 +3,7 @@ package pl.saz.service.operationRecord;
 import pl.saz.model.operationRecord.OperationRecords;
 import pl.saz.model.operationRecord.OperationSummary;
 import pl.saz.model.operationRecord.OperationTypes;
+import pl.saz.model.stock.StockList;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,5 +20,5 @@ public interface OperationRecordService {
     OperationSummary getOperationSummaryByType(OperationTypes type, LocalDateTime startDate, LocalDateTime endDate);
     OperationSummary getOperationSummaryBySubjectName(String subjectName, LocalDateTime startDate, LocalDateTime endDate);
     List<OperationSummary> getOperationSummary(LocalDateTime startDate,LocalDateTime endDate);
-
+    List<StockList> getByDate(String startDate, String endDate);
 }

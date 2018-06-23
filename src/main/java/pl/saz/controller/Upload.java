@@ -39,7 +39,7 @@ public class Upload {
 
         String filesName = uploadfile.getOriginalFilename();
 
-        System.out.println(filesName);
+
 
 
         return "{\"name\":\""+filesName+"\"}";
@@ -75,7 +75,7 @@ public class Upload {
 
         //https://cursache.wordpress.com/2016/02/02/integrating-spring-mvc-and-apache-poi/
         LocalDate today = LocalDate.now();
-        System.out.println(today.toString());
+
         String magazyn = "Magazyn_"+today.toString()+".xlsx";
 
         XSSFWorkbook wb = null;
